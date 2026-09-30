@@ -1,0 +1,776 @@
+:root
+  font-family: -apple-system, BlinkMacSystemFont, 'Noto Sans TC', 'Microsoft JhengHei', system-ui, sans-serif
+  color: #183036
+  background: #f6f8f8
+  font-synthesis: none
+  text-rendering: optimizeLegibility
+
+*
+  box-sizing: border-box
+
+html
+  scroll-behavior: smooth
+
+body
+  margin: 0
+  min-width: 320px
+
+button, input, select
+  font: inherit
+
+button
+  cursor: pointer
+
+button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible
+  outline: 3px solid #78c7be
+  outline-offset: 2px
+
+.site-shell
+  min-height: 100vh
+
+.site-header
+  min-height: 68px
+  padding: 0 clamp(20px, 3vw, 42px)
+  display: flex
+  align-items: center
+  justify-content: space-between
+  gap: 16px
+  background: #fff
+  border-bottom: 1px solid #e3ebea
+
+.brand
+  display: flex
+  align-items: center
+  gap: 10px
+  font-size: 1.05rem
+  font-weight: 800
+  letter-spacing: .02em
+  color: inherit
+  text-decoration: none
+
+.site-nav
+  display: flex
+  align-items: center
+  gap: 4px
+
+  a
+    padding: 9px 13px
+    border-radius: 8px
+    color: #536b70
+    font-size: .88rem
+    font-weight: 700
+    text-decoration: none
+    white-space: nowrap
+
+    &:hover
+      background: #f2f7f6
+
+    &[aria-current="page"]
+      background: #e8f5f2
+      color: #096d65
+
+.brand-mark
+  border-radius: 9px
+
+.demo-badge
+  padding: 6px 10px
+  border-radius: 6px
+  background: #e8f5f2
+  color: #096d65
+  font-size: .76rem
+  font-weight: 750
+  white-space: nowrap
+
+.main-layout
+  max-width: 1600px
+  margin: auto
+  display: grid
+  grid-template-columns: minmax(390px, 43%) minmax(0, 1fr)
+  align-items: start
+
+.list-pane
+  min-width: 0
+  background: #f8faf9
+  border-right: 1px solid #e0e9e7
+
+.intro
+  padding: 28px clamp(20px, 3vw, 38px) 16px
+  background: #fff
+
+  h1
+    margin: 0 0 8px
+    font-size: clamp(1.45rem, 2.2vw, 1.85rem)
+    line-height: 1.3
+    letter-spacing: -.035em
+
+  p
+    margin: 0
+    color: #5b7075
+    font-size: .9rem
+    line-height: 1.6
+
+.caution
+  display: flex
+  gap: 10px
+  align-items: flex-start
+  margin-top: 18px
+  padding: 11px 13px
+  border-radius: 9px
+  background: #eaf6f3
+  color: #0a6a62
+  font-size: .84rem
+  font-weight: 650
+  line-height: 1.55
+
+.caution-icon
+  width: 18px
+  height: 18px
+  flex: 0 0 18px
+  display: grid
+  place-items: center
+  margin-top: 1px
+  border: 1.5px solid currentColor
+  border-radius: 50%
+  font-family: Georgia, serif
+  font-size: .73rem
+  font-weight: bold
+
+.search-panel
+  padding: 17px clamp(20px, 3vw, 38px) 19px
+  background: #fff
+
+.search-field
+  margin-top: 13px
+
+.filter-row
+  display: flex
+  flex-wrap: wrap
+  gap: 8px
+  margin-top: 14px
+
+.filter-help
+  margin: 10px 0 0
+  color: #65777b
+  font-size: .77rem
+  line-height: 1.55
+
+.results
+  padding: 20px clamp(14px, 2.4vw, 30px) 32px
+  scroll-margin-top: 12px
+
+.results-heading
+  display: flex
+  align-items: baseline
+  justify-content: space-between
+  gap: 10px
+  margin: 0 5px 13px
+
+  h2
+    display: flex
+    align-items: baseline
+    flex-wrap: wrap
+    gap: 8px
+    margin: 0
+    font-size: 1rem
+
+.count
+  color: #6a7c80
+  font-size: .79rem
+  font-weight: 500
+
+.share-row
+  margin: 0 5px 14px
+
+.map-jump
+  padding: 5px 0
+  border: 0
+  background: transparent
+  color: #0a6d65
+  font-size: .82rem
+  font-weight: 750
+  white-space: nowrap
+
+.hospital-list
+  display: grid
+  gap: 11px
+
+.hospital-card
+  overflow: hidden
+  border: 1px solid #dce6e4
+  border-radius: 13px
+  background: #fff
+  transition: border-color .15s, box-shadow .15s
+
+  &.selected
+    border-color: #0b716c
+    box-shadow: 0 0 0 2px #ddefe9
+
+.card-select
+  display: block
+  width: 100%
+  padding: 15px 16px 0
+  border: 0
+  background: transparent
+  color: inherit
+  text-align: left
+
+.card-heading
+  display: flex
+  align-items: center
+  justify-content: space-between
+  gap: 10px
+
+  strong
+    font-size: 1.03rem
+    line-height: 1.45
+
+.card-letter
+  display: grid
+  place-items: center
+  width: 25px
+  height: 25px
+  flex: 0 0 25px
+  border-radius: 50%
+  background: #0b716c
+  color: white
+  font-size: .76rem
+  font-weight: 800
+
+.service-row
+  display: flex
+  flex-wrap: wrap
+  gap: 6px
+  margin: 10px 0 8px
+
+.service-tag
+  display: inline-block
+  padding: 5px 8px
+  border-radius: 5px
+  background: #e7f4f0
+  color: #0a655e
+  font-size: .74rem
+  font-weight: 750
+
+  &.muted
+    background: #f1f3f3
+    color: #647479
+
+.status-line
+  display: flex
+  align-items: center
+  gap: 7px
+  color: #0a6c63
+  font-size: .84rem
+  font-weight: 700
+
+  &.unknown
+    color: #a26332
+
+  &.closed
+    color: #61747a
+
+.status-dot
+  width: 7px
+  height: 7px
+  border-radius: 50%
+  background: currentColor
+
+.location
+  display: block
+  margin: 7px 0 0
+  color: #64777c
+  font-size: .8rem
+
+.hospital-note
+  display: block
+  margin: 7px 0 0
+  color: #52696d
+  font-size: .79rem
+  line-height: 1.55
+
+.night-hours
+  display: block
+  margin-top: 8px
+  color: #254b51
+  font-size: .84rem
+  font-weight: 750
+
+.card-actions
+  display: grid
+  grid-template-columns: 1fr 1fr
+  gap: 9px
+  padding: 15px 16px 16px
+
+  a
+    display: grid
+    place-items: center
+    min-height: 43px
+    border-radius: 8px
+    font-size: .86rem
+    font-weight: 750
+    text-align: center
+    text-decoration: none
+
+.call-button
+  border: 1px solid #0b716c
+  background: #0b716c
+  color: white
+
+  &:hover
+    background: #075a55
+
+.route-button
+  border: 1px solid #d2dddb
+  background: #fff
+  color: #183036
+
+  &:hover
+    background: #f3f8f7
+
+.card-source
+  margin-top: 12px
+
+.hospital-details
+  display: grid
+  gap: 10px
+  margin: 0 0 15px
+
+  div
+    display: grid
+    gap: 2px
+
+  dt
+    color: #687b7f
+    font-size: .8rem
+    font-weight: 700
+
+  dd
+    margin: 0
+    overflow-wrap: anywhere
+
+.data-footnote
+  margin: 16px 5px 0
+  color: #687b7f
+  font-size: .76rem
+  line-height: 1.6
+
+.empty-state
+  padding: 27px 20px
+  border: 1px solid #dce6e4
+  border-radius: 12px
+  background: #fff
+
+  h3
+    margin: 0 0 6px
+    font-size: 1rem
+
+  p
+    margin: 0 0 14px
+    color: #64777c
+    font-size: .86rem
+
+.clear-button
+  padding: 9px 13px
+  border: 1px solid #0b716c
+  border-radius: 8px
+  background: white
+  color: #0b716c
+  font-size: .84rem
+  font-weight: 700
+
+.map-pane
+  position: sticky
+  top: 0
+  min-width: 0
+  padding: 20px
+  background: #fff
+  scroll-margin-top: 14px
+
+.map-heading
+  display: flex
+  align-items: baseline
+  justify-content: space-between
+  gap: 10px
+  margin-bottom: 13px
+
+  h2
+    margin: 0
+    font-size: 1rem
+
+  span
+    color: #687b80
+    font-size: .8rem
+
+.map-back
+  display: none
+  min-height: 36px
+  padding: 5px 8px
+  border: 0
+  background: transparent
+  color: #0b716c
+  font-size: .84rem
+  font-weight: 750
+
+.map-stage
+  position: relative
+  min-height: min(630px, calc(100vh - 110px))
+  overflow: hidden
+  border-radius: 13px
+  background: #eef5f3
+  isolation: isolate
+
+.map-iframe
+  position: absolute
+  inset: 0
+  width: 100%
+  height: 100%
+  border: 0
+
+.map-empty-panel
+  position: absolute
+  inset: 0 0 150px
+  display: grid
+  align-content: center
+  justify-items: center
+  gap: 8px
+  padding: 26px
+  text-align: center
+
+  strong
+    color: #214a4a
+    font-size: 1.04rem
+
+  p
+    max-width: 290px
+    margin: 0
+    color: #60777a
+    font-size: .86rem
+    line-height: 1.6
+
+.map-pin
+  display: grid
+  place-items: center
+  width: 54px
+  height: 54px
+  border: 1px solid #c7e3dc
+  border-radius: 50%
+  background: #fff
+  color: #0b716c
+  font-size: 1.65rem
+
+.map-selection
+  position: absolute
+  z-index: 3
+  right: 17px
+  bottom: 17px
+  left: 17px
+  display: grid
+  gap: 3px
+  max-width: 380px
+  padding: 14px 16px
+  border-radius: 10px
+  background: white
+  box-shadow: 0 5px 20px #1c393121
+
+  strong
+    font-size: .88rem
+
+  span
+    color: #62777a
+    font-size: .77rem
+
+.selection-kicker
+  color: #0b716c !important
+  font-size: .73rem !important
+  font-weight: 750
+
+.selection-actions
+  display: flex
+  flex-wrap: wrap
+  gap: 14px
+  margin: 8px 0 4px
+
+  a
+    color: #0b716c
+    font-size: .82rem
+    font-weight: 750
+    text-underline-offset: 3px
+
+.sources-page
+  max-width: 1200px
+  margin: 0 auto
+  padding: 25px clamp(20px, 3vw, 42px) 65px
+
+.sources-hero
+  padding: clamp(22px, 3vw, 38px)
+  border: 1px solid #e0e9e7
+  border-radius: 16px
+  background: #fff
+
+.back-link, .bottom-return
+  color: #0b716c
+  font-size: .88rem
+  font-weight: 750
+  text-underline-offset: 3px
+
+.sources-intro
+  display: grid
+  grid-template-columns: minmax(0, 1.65fr) minmax(235px, .8fr)
+  align-items: end
+  gap: 32px
+  margin-top: 25px
+
+  h1
+    margin: 5px 0 12px
+    font-size: clamp(1.7rem, 3vw, 2.35rem)
+    letter-spacing: -.035em
+    line-height: 1.25
+
+  p
+    max-width: 670px
+    margin: 0
+    color: #526b70
+    font-size: .95rem
+    line-height: 1.7
+
+.page-kicker
+  color: #0b716c
+  font-size: .82rem
+  font-weight: 800
+  letter-spacing: .08em
+
+.sources-aside
+  display: grid
+  gap: 7px
+  padding: 16px 18px
+  border-left: 4px solid #0b716c
+  border-radius: 4px 10px 10px 4px
+  background: #eaf6f3
+  color: #245655
+  font-size: .86rem
+  line-height: 1.55
+
+  strong
+    color: #0a625d
+    font-size: .93rem
+
+.sources-content
+  display: grid
+  gap: 32px
+  margin-top: 30px
+
+.section-heading
+  display: flex
+  align-items: baseline
+  justify-content: space-between
+  gap: 15px
+  margin-bottom: 15px
+
+  h2
+    margin: 0
+    font-size: 1.2rem
+
+  span
+    color: #63797d
+    font-size: .8rem
+
+.method-list
+  display: grid
+  grid-template-columns: repeat(3, minmax(0, 1fr))
+  gap: 13px
+  margin: 0
+  padding: 0
+  list-style: none
+
+  li
+    min-width: 0
+    padding: 18px
+    border: 1px solid #e0e9e7
+    border-radius: 12px
+    background: #fff
+
+  strong
+    display: block
+    margin-top: 10px
+    font-size: .98rem
+
+  p
+    margin: 7px 0 0
+    color: #587076
+    font-size: .88rem
+    line-height: 1.6
+
+.method-number
+  color: #0b716c
+  font-size: .82rem
+  font-weight: 800
+
+.source-groups
+  display: grid
+  grid-template-columns: repeat(3, minmax(0, 1fr))
+  gap: 13px
+
+.source-group
+  min-width: 0
+  padding: 20px
+  border: 1px solid #e0e9e7
+  border-radius: 12px
+  background: #fff
+
+  > p
+    min-height: 4.5em
+    margin: 10px 0 14px
+    color: #597176
+    font-size: .85rem
+    line-height: 1.6
+
+  ul
+    margin: 0
+    padding: 0
+    list-style: none
+
+  li
+    border-top: 1px solid #edf1f0
+
+  a
+    display: flex
+    align-items: baseline
+    justify-content: space-between
+    gap: 8px
+    padding: 12px 0
+    color: #0a625e
+    font-size: .88rem
+    font-weight: 650
+    line-height: 1.45
+    text-decoration: none
+    overflow-wrap: anywhere
+
+    &:hover
+      text-decoration: underline
+      text-underline-offset: 3px
+
+    span
+      flex: 0 0 auto
+
+.group-heading
+  display: flex
+  align-items: baseline
+  justify-content: space-between
+  gap: 12px
+
+  h3
+    margin: 0
+    font-size: 1.04rem
+
+  span
+    color: #657b7f
+    font-size: .78rem
+
+.source-update
+  margin: 15px 0 0
+  color: #62787c
+  font-size: .83rem
+  line-height: 1.6
+
+.bottom-return
+  display: inline-block
+  margin-top: 24px
+
+@media (max-width: 850px)
+  .main-layout
+    display: block
+
+  .list-pane
+    border-right: 0
+
+  .map-pane
+    position: static
+    padding: 20px 14px 28px
+
+  .map-stage
+    min-height: 390px
+
+  .map-back
+    display: inline-block
+
+  .sources-intro
+    grid-template-columns: 1fr
+    gap: 20px
+
+  .source-groups
+    grid-template-columns: repeat(2, minmax(0, 1fr))
+
+  .source-group:first-child
+    grid-row: span 2
+
+@media (max-width: 520px)
+  .site-header
+    padding: 10px 20px 0
+    flex-wrap: wrap
+    gap: 8px
+
+  .brand
+    font-size: .98rem
+
+  .brand-mark
+    width: 29px
+    height: 29px
+
+  .site-nav
+    order: 3
+    width: calc(100% + 40px)
+    margin: 3px -20px 0
+    padding: 6px 14px
+    border-top: 1px solid #e9eeed
+
+    a
+      flex: 1
+      text-align: center
+      font-size: .86rem
+
+  .intro
+    padding: 22px 20px 16px
+
+  .intro h1
+    font-size: 1.56rem
+
+  .search-panel
+    padding: 14px 20px 17px
+
+  .results
+    padding: 19px 14px 26px
+
+  .map-heading
+    margin: 0 4px 12px
+
+  .map-heading span
+    display: none
+
+  .map-stage
+    min-height: 370px
+
+  .sources-page
+    padding: 16px 14px 45px
+
+  .sources-hero
+    padding: 21px 18px
+
+  .sources-intro
+    margin-top: 18px
+
+  .sources-content
+    gap: 27px
+    margin-top: 25px
+
+  .method-list, .source-groups
+    grid-template-columns: 1fr
+
+  .source-group:first-child
+    grid-row: auto
+
+  .source-group > p
+    min-height: 0
+
+@media (prefers-reduced-motion: reduce)
+  html
+    scroll-behavior: auto

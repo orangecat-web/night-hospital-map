@@ -1,0 +1,100 @@
+// 舊版 _navs.sass 與 Slidebars 行為的 CSS 部分。
+// 同一份 nav 在桌面顯示為橫列，開啟時由 Vue Teleport 移至 body。
+:root
+  --nav-side-size: min(84vw, 360px)
+  --nav-vertical-size: min(70dvh, 320px)
+  --nav-speed: 380ms
+
+.site, .standard-page
+  transition: transform var(--nav-speed) cubic-bezier(.2, .7, .2, 1)
+  &.nav-pushed[data-nav-side='left']
+    transform: translateX(var(--nav-side-size))
+  &.nav-pushed[data-nav-side='right']
+    transform: translateX(calc(0px - var(--nav-side-size)))
+  &.nav-pushed[data-nav-side='top']
+    transform: translateY(var(--nav-vertical-size))
+  &.nav-pushed[data-nav-side='bottom']
+    transform: translateY(calc(0px - var(--nav-vertical-size)))
+
+.site-nav.offcanvas-panel.is-open
+  display: flex
+  position: fixed
+  z-index: 51
+  top: 0
+  left: 0
+  width: var(--nav-side-size)
+  height: 100dvh
+  padding: 100px 38px 38px
+  flex-direction: column
+  align-items: stretch
+  justify-content: flex-start
+  gap: 20px
+  overflow-y: auto
+  background: #f5f1e9
+  color: #1c2420
+  border-right: 2px solid #1c2420
+  box-shadow: 12px 0 40px rgb(0 0 0 / 12%)
+  transform: translateX(-100%)
+  transition: transform var(--nav-speed) cubic-bezier(.2, .7, .2, 1)
+  a
+    padding: 10px 0
+    border-bottom: 1px solid rgb(28 36 32 / 22%)
+    font-size: clamp(18px, 3vw, 25px)
+  &[data-side='right']
+    left: auto
+    right: 0
+    border-right: 0
+    border-left: 2px solid #1c2420
+    transform: translateX(100%)
+  &[data-side='top'], &[data-side='bottom']
+    width: 100vw
+    height: var(--nav-vertical-size)
+    padding: 68px max(32px, calc((100vw - 1000px) / 2)) 28px
+    border-right: 0
+  &[data-side='top']
+    border-bottom: 2px solid #1c2420
+    transform: translateY(-100%)
+  &[data-side='bottom']
+    top: auto
+    bottom: 0
+    border-top: 2px solid #1c2420
+    transform: translateY(100%)
+  &.is-visible
+    transform: translate3d(0, 0, 0)
+
+.offcanvas-close
+  position: absolute
+  top: 22px
+  right: 24px
+  width: 42px
+  height: 42px
+  border: 1px solid #1c2420
+  border-radius: 50%
+  background: #ff9a3d
+  color: #1c2420
+  font-size: 28px
+  line-height: 1
+  cursor: pointer
+
+.nav-scrim
+  position: fixed
+  z-index: 50
+  inset: 0
+  width: 100%
+  height: 100%
+  border: 0
+  background: rgb(17 25 22 / 44%)
+  opacity: 0
+  pointer-events: none
+  transition: opacity var(--nav-speed)
+  &.is-visible
+    opacity: 1
+    pointer-events: auto
+
+@media (max-width: 1100px)
+  .site-nav.offcanvas-panel:not(.is-open)
+    display: none
+
+@media (prefers-reduced-motion: reduce)
+  .site, .standard-page, .site-nav.offcanvas-panel, .nav-scrim
+    transition-duration: .01ms

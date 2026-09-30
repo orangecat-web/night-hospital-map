@@ -1,0 +1,22 @@
+{
+  "name": "vet-night-finder",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "verify:data": "node scripts/verify-data.mjs",
+    "preview": "vite preview --host 0.0.0.0"
+  },
+  "dependencies": {
+    "@orangecat/vue-components": "file:packages/orange-vue-components",
+    "vue": "^3.5.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.0",
+    "vite": "^8.0.0",
+    "pug": "^3.0.0",
+    "sass": "^1.90.0"
+  }
+}

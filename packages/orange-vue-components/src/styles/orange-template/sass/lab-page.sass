@@ -1,0 +1,786 @@
+@use 'sass:math'
+@use './main'
+@use './effects' as fx
+@use './mixin' as oc
+@use './grid' as grid
+@use './nav-lab'
+@use './media-lightbox'
+
+$ink: #1c2420
+$muted: #65716b
+$cream: #f5f1e9
+$white: #fffcf7
+
+@function rem($px)
+  @return math.div($px, 16) * 1rem
+
+.lab-module-index
+  display: grid
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr))
+  gap: 1px
+  margin-bottom: 24px
+  border: 1px solid rgba($ink, .24)
+  background: rgba($ink, .24)
+
+.lab-module-picker
+  display: none
+
+.lab-module-link
+  display: grid
+  grid-template-columns: 1fr auto
+  gap: 14px
+  align-items: center
+  min-height: 125px
+  padding: clamp(18px, 2vw, 30px)
+  background: $cream
+  transition: background .25s, padding .25s
+  &:hover
+    background: #ffe7d0
+    padding-left: clamp(24px, 2.6vw, 38px)
+  .lab-module-number
+    grid-column: 1 / -1
+    color: $muted
+    font-size: rem(10)
+    font-weight: 850
+    letter-spacing: .12em
+  strong
+    font-size: clamp(rem(17), 1.8vw, rem(23))
+  .lab-module-arrow
+    font-size: rem(22)
+
+.lab-module-section
+  scroll-margin-top: 84px
+  padding: 112px 0
+
+.standard-page .lab-module-section
+  margin-inline: -32px
+  padding-inline: 32px
+
+.lab-module--effects, .lab-module--carousel
+  background: $white
+
+.lab-module--nav-demo, .lab-module--gallery
+  background: $cream
+
+.lab-module--nav-demo .nav-lab
+  margin-top: 0
+
+.carousel-demo
+  display: grid
+  grid-template-columns: 1fr 1fr
+  align-items: center
+  gap: clamp(32px, 6vw, 90px)
+  min-height: 590px
+
+.carousel-demo-copy
+  h3
+    margin: 20px 0
+    font-size: clamp(rem(32), 3.8vw, rem(54))
+    line-height: 1.25
+    letter-spacing: -.05em
+  > p:last-child
+    max-width: 480px
+    color: $muted
+    font-size: rem(15)
+    line-height: 1.85
+
+.carousel-demo .hero-media
+  width: min(100%, 520px)
+  justify-self: center
+
+.lab-module--panorama
+  background: $ink
+  color: $white
+  .section-description
+    color: #bbc9bf
+
+.panorama-scene-bar
+  display: flex
+  align-items: end
+  justify-content: space-between
+  gap: 24px
+  margin-bottom: 24px
+
+.panorama-scene-options
+  display: flex
+  flex-wrap: wrap
+  gap: 8px
+
+.panorama-scene-button
+  padding: 9px 14px
+  border: 1px solid rgba($white, .48)
+  border-radius: 24px
+  background: transparent
+  color: $white
+  cursor: pointer
+  font: inherit
+  font-size: rem(12)
+  white-space: nowrap
+  &:hover, &:focus-visible, &.is-active
+    border-color: #ff9a3d
+    background: #ff9a3d
+    color: $ink
+  &:disabled
+    border-color: rgba($white, .25)
+    background: transparent
+    color: rgba($white, .5)
+    cursor: not-allowed
+
+.panorama-scene-description
+  margin: 12px 0 0
+  color: #bbc9bf
+  font-size: rem(13)
+  line-height: 1.7
+
+.panorama-viewer
+  background: #172d35
+  color: $white
+  outline-offset: 5px
+  &:fullscreen, &.is-fallback-fullscreen
+    width: 100vw
+    height: 100vh
+    height: 100dvh
+    .panorama-stage
+      height: 100%
+      max-height: none
+      aspect-ratio: auto
+    .panorama-scene-menu
+      top: max(14px, env(safe-area-inset-top))
+      left: max(14px, env(safe-area-inset-left))
+    .panorama-floorplan
+      bottom: max(14px, env(safe-area-inset-bottom))
+      left: max(14px, env(safe-area-inset-left))
+    .panorama-bottomline
+      right: max(16px, env(safe-area-inset-right))
+      bottom: max(20px, env(safe-area-inset-bottom))
+  &.is-fallback-fullscreen
+    position: fixed
+    z-index: 1000
+    inset: 0
+    width: 100%
+
+.panorama-stage
+  position: relative
+  isolation: isolate
+  width: 100%
+  height: clamp(420px, 52vw, 680px)
+  overflow: hidden
+  border: 1px solid rgba($white, .25)
+
+.panorama-canvas
+  display: block
+  width: 100%
+  height: 100%
+  touch-action: none
+  cursor: grab
+  &:active
+    cursor: grabbing
+
+.panorama-hotspot
+  position: absolute
+  z-index: 2
+  display: grid
+  justify-items: center
+  gap: 7px
+  width: max-content
+  max-width: 165px
+  padding: 0
+  border: 0
+  background: transparent
+  color: $white
+  cursor: pointer
+  transform: translate(-50%, -50%)
+  &:focus-visible
+    outline: 2px solid $white
+    outline-offset: 6px
+  &:hover .panorama-hotspot-icon, &:focus-visible .panorama-hotspot-icon
+    transform: scale(1.12)
+    background: $white
+    color: $ink
+
+.panorama-hotspot-icon
+  display: grid
+  place-items: center
+  width: 48px
+  height: 48px
+  border: 2px solid $white
+  border-radius: 50%
+  background: #ff9a3d
+  color: $ink
+  box-shadow: 0 0 0 7px rgba($white, .23), 0 4px 18px rgba($ink, .65)
+  font-size: rem(22)
+  font-weight: 800
+  transition: transform .2s, background .2s
+
+.panorama-hotspot-label
+  padding: 5px 9px
+  background: rgba($ink, .86)
+  font-size: rem(11)
+  font-weight: 750
+  line-height: 1.4
+  text-align: center
+  white-space: normal
+
+.panorama-scene-menu
+  position: absolute
+  z-index: 5
+  top: 22px
+  left: 22px
+  width: min(210px, calc(100% - 44px))
+  padding: 6px
+  border: 1px solid rgba($white, .5)
+  border-radius: 12px
+  background: rgba($white, .88)
+  box-shadow: 0 10px 30px rgba($ink, .22)
+  color: $ink
+  backdrop-filter: blur(12px)
+
+.panorama-menu-toggle
+  display: flex
+  align-items: center
+  justify-content: space-between
+  gap: 10px
+  width: 100%
+  padding: 7px 9px
+  border: 0
+  border-radius: 6px
+  background: transparent
+  color: $ink
+  cursor: pointer
+  font: inherit
+  text-align: left
+  &:hover, &:focus-visible
+    background: #ffe7d0
+
+.panorama-menu-toggle-text
+  display: grid
+  gap: 3px
+  min-width: 0
+  font-size: rem(12)
+  font-weight: 750
+  span
+    overflow: hidden
+    text-overflow: ellipsis
+    white-space: nowrap
+  small
+    color: $muted
+    font-size: rem(9)
+    font-weight: 850
+    letter-spacing: .1em
+
+.panorama-menu-chevron
+  flex: none
+  font-size: rem(17)
+
+.panorama-menu-list
+  display: grid
+  max-height: 160px
+  overflow-y: auto
+  overscroll-behavior: contain
+
+.panorama-menu-option
+  display: flex
+  align-items: center
+  justify-content: space-between
+  gap: 6px
+  min-height: 40px
+  padding: 8px 10px
+  border: 0
+  border-radius: 5px
+  background: transparent
+  color: $ink
+  cursor: pointer
+  font: inherit
+  font-size: rem(12)
+  font-weight: 700
+  text-align: left
+  &:hover, &:focus-visible
+    background: #ffe7d0
+  &.is-active
+    background: #ff9a3d
+  &:disabled
+    background: transparent
+    color: $muted
+    cursor: not-allowed
+  small
+    flex: none
+    font-size: rem(10)
+
+.panorama-floorplan
+  position: absolute
+  z-index: 4
+  bottom: 19px
+  left: 22px
+  width: 154px
+  overflow: hidden
+  border: 1px solid rgba($white, .55)
+  border-radius: 12px
+  background: rgba($white, .92)
+  box-shadow: 0 10px 30px rgba($ink, .28)
+  color: $ink
+  backdrop-filter: blur(12px)
+  &.is-open
+    width: min(215px, calc(100% - 44px))
+
+.panorama-floorplan-toggle
+  display: flex
+  align-items: center
+  justify-content: space-between
+  gap: 12px
+  width: 100%
+  padding: 11px 13px
+  border: 0
+  background: transparent
+  color: $ink
+  cursor: pointer
+  font: inherit
+  font-size: rem(12)
+  font-weight: 800
+  text-align: left
+  &:hover, &:focus-visible
+    background: #ffe7d0
+
+.panorama-floorplan-content
+  max-height: min(55vh, 360px)
+  padding: 0 9px 9px
+  overflow-y: auto
+  img
+    display: block
+    width: 100%
+    height: auto
+  p
+    margin: 8px 2px 0
+    color: $muted
+    font-size: rem(10)
+    line-height: 1.5
+
+.panorama-floorplan-map
+  position: relative
+  width: 100%
+
+.panorama-map-spot
+  position: absolute
+  display: grid
+  place-items: center
+  min-height: 24px
+  padding: 0
+  border: 1px dashed rgba(#d45b13, .95)
+  border-radius: 3px
+  background: rgba(#ff9a3d, .09)
+  color: $ink
+  cursor: pointer
+  font: inherit
+  &:hover, &:focus-visible, &.is-current
+    border: 2px solid #e75c0a
+    background: rgba(#ff9a3d, .3)
+  &:disabled
+    border: 1px dashed #777
+    background: rgba($ink, .25)
+    color: $white
+    cursor: not-allowed
+  span
+    padding: 2px 4px
+    border-radius: 3px
+    background: rgba($white, .94)
+    font-size: rem(10)
+    font-weight: 800
+    white-space: nowrap
+
+.panorama-topline, .panorama-bottomline
+  position: absolute
+  z-index: 2
+  right: clamp(16px, 3vw, 36px)
+  left: clamp(16px, 3vw, 36px)
+  display: flex
+  align-items: center
+  justify-content: space-between
+  gap: 16px
+  pointer-events: none
+
+.panorama-topline
+  top: 24px
+  left: auto
+  font-size: rem(11)
+  font-weight: 850
+  letter-spacing: .15em
+  text-shadow: 0 2px 8px #142c31
+
+.panorama-bottomline
+  bottom: 24px
+
+.panorama-hint
+  margin-left: 175px
+  color: $white
+  font-size: rem(12)
+  font-weight: 750
+  text-shadow: 0 2px 8px #142c31
+
+.panorama-controls
+  display: flex
+  gap: 6px
+  pointer-events: auto
+  button
+    display: grid
+    place-items: center
+    width: 42px
+    height: 42px
+    border: 1px solid rgba($white, .55)
+    background: rgba($ink, .78)
+    color: $white
+    cursor: pointer
+    font-size: rem(20)
+    &:hover
+      background: #ff9a3d
+      color: $ink
+
+.panorama-reticle
+  position: absolute
+  z-index: 1
+  top: 50%
+  left: 50%
+  transform: translate(-50%, -50%)
+  color: rgba($white, .65)
+  font-size: rem(22)
+  font-weight: 300
+  pointer-events: none
+
+.panorama-status
+  position: absolute
+  z-index: 3
+  inset: 0
+  display: grid
+  place-items: center
+  padding: 30px
+  background: rgba($ink, .73)
+  color: $white
+  text-align: center
+  font-size: rem(14)
+
+.panorama-credit
+  margin: 15px 0 0
+  color: #bbc9bf
+  font-size: rem(11)
+
+.effect-workbench
+  display: grid
+  grid-template-columns: 1.25fr .75fr
+  min-height: 520px
+  border: 1px solid rgba(28, 36, 32, .17)
+
+.effect-preview
+  position: relative
+  overflow: hidden
+  background: #d6d1c7
+  img
+    display: block
+    width: 100%
+    height: 100%
+    position: absolute
+    inset: 0
+    object-fit: cover
+    transition: filter .45s
+  @each $name in grayscale, sepia, contrast, brightness, invert, opacity, hue-rotate, blur, saturate
+    &.effect-filter-#{$name} img
+      @include fx.image-filter($name)
+  // 舊版 pseffects 的 15 種模式；CSS 名稱中的連字號取代舊版縮寫。
+  @each $mode in multiply, screen, overlay, darken, lighten, color-dodge, color-burn, hard-light, soft-light, difference, exclusion, hue, saturation, color, luminosity
+    &.effect-blend-#{$mode}
+      @include fx.blend-overlay(rgba(255, 153, 0, .58), $mode)
+
+.effect-preview-label
+  position: absolute
+  z-index: 2
+  left: 20px
+  bottom: 20px
+  padding: 8px 11px
+  color: $cream
+  background: rgba(28, 36, 32, .83)
+  font-size: rem(11)
+  letter-spacing: .08em
+
+.effect-controls
+  display: flex
+  flex-direction: column
+  padding: clamp(20px, 3vw, 46px)
+
+.control-heading
+  font-size: rem(11)
+  font-weight: 850
+  letter-spacing: .18em
+  margin: 0 0 22px
+
+.effect-groups
+  display: flex
+  gap: 8px
+  margin-bottom: 22px
+
+.effect-group
+  flex: 1
+  min-width: 0
+  padding: 10px 6px
+  border: 1px solid rgba(28, 36, 32, .3)
+  background: transparent
+  color: $ink
+  cursor: pointer
+  font-size: rem(12)
+  font-weight: 750
+  &:hover, &.is-active
+    background: $ink
+    color: $white
+
+.effect-options
+  max-height: 425px
+  overflow-y: auto
+  overscroll-behavior: contain
+
+.effect-option
+  display: grid
+  grid-template-columns: 30px 1fr 94px 20px
+  align-items: center
+  gap: 10px
+  width: 100%
+  min-height: 67px
+  border: 0
+  border-top: 1px solid rgba(28, 36, 32, .17)
+  background: transparent
+  text-align: left
+  color: $ink
+  cursor: pointer
+  transition: padding .2s, background .2s
+  &:last-of-type
+    border-bottom: 1px solid rgba(28, 36, 32, .17)
+  &:hover, &.is-active
+    background: #ffe7d0
+    padding-inline: 11px
+
+.effect-number, .effect-english
+  color: $muted
+  font-size: rem(11)
+
+.effect-name
+  font-size: rem(17)
+  font-weight: 800
+
+.effect-arrow
+  font-size: rem(20)
+
+.control-note
+  color: $muted
+  font-size: rem(11)
+  margin: auto 0 0
+  padding-top: 20px
+
+.category-controls
+  display: flex
+  flex-wrap: wrap
+  gap: 8px
+  margin-bottom: 32px
+
+.category-button
+  border: 1px solid rgba(28, 36, 32, .3)
+  background: transparent
+  color: $ink
+  padding: 9px 17px
+  border-radius: 100px
+  cursor: pointer
+  font-size: rem(13)
+  transition: background .2s, color .2s
+  &:hover, &.is-active
+    background: $ink
+    color: $white
+
+.gallery-grid
+  display: grid
+  grid-template-columns: repeat(3, minmax(0, 1fr))
+  gap: 42px 24px
+  position: relative
+  @include grid.breakpoint(sm)
+    grid-template-columns: repeat(2, minmax(0, 1fr))
+  @include grid.breakpoint()
+    grid-template-columns: 1fr
+
+.gallery-card
+  figure
+    margin: 0
+
+.gallery-image
+  position: relative
+  aspect-ratio: 4 / 4.4
+  background: #ddd5c6
+  @include fx.image-reveal
+  img
+    width: 100%
+    height: 100%
+    display: block
+    object-fit: cover
+
+.gallery-placeholder
+  display: flex
+  width: 100%
+  height: 100%
+  align-items: center
+  justify-content: center
+  color: $ink
+  font-size: rem(20)
+  font-weight: 900
+  letter-spacing: .14em
+
+.image-overlay
+  position: absolute
+  inset: auto 0 0
+  min-height: 58px
+  display: flex
+  align-items: center
+  justify-content: center
+  color: $ink
+  background: rgba(255, 154, 61, .95)
+  font-size: rem(12)
+  font-weight: 900
+  letter-spacing: .08em
+
+.card-open
+  position: absolute
+  inset: 0
+  width: 100%
+  border: 0
+  background: transparent
+  cursor: pointer
+  &:focus-visible
+    outline: 3px solid #dc6808
+    outline-offset: -6px
+
+.card-meta
+  display: flex
+  justify-content: space-between
+  color: $muted
+  font-size: rem(10)
+  font-weight: 850
+  letter-spacing: .1em
+  padding: 17px 0 7px
+
+.card-title
+  display: flex
+  justify-content: space-between
+  align-items: center
+  h3
+    font-size: rem(23)
+    margin: 0
+    @include oc.mline(2)
+  span
+    font-size: rem(22)
+
+.gallery-card figcaption > p
+  color: $muted
+  font-size: rem(13)
+  line-height: 1.6
+  margin: 7px 0 0
+
+.gallery-note
+  margin: 50px 0 0
+  color: $muted
+  font-size: rem(12)
+
+.gallery-enter-active, .gallery-leave-active
+  transition: opacity .25s, transform .25s
+.gallery-enter-from, .gallery-leave-to
+  opacity: 0
+  transform: translateY(15px)
+.gallery-leave-active
+  position: absolute
+
+@media (max-width: 760px)
+  .lab-module-index
+    display: none
+  .lab-module-picker
+    display: block
+    position: relative
+    margin-bottom: 24px
+    select
+      appearance: none
+      width: 100%
+      min-height: 62px
+      padding: 14px 54px 14px 18px
+      border: 1px solid rgba($ink, .35)
+      border-radius: 0
+      background: $cream
+      color: $ink
+      font: inherit
+      font-size: rem(16)
+      font-weight: 750
+      cursor: pointer
+      &:focus-visible
+        outline: 2px solid #e67828
+        outline-offset: 3px
+    span
+      position: absolute
+      top: 50%
+      right: 19px
+      transform: translateY(-50%)
+      color: $ink
+      pointer-events: none
+  .lab-module-section
+    padding: 78px 0
+  .carousel-demo
+    grid-template-columns: 1fr
+    min-height: 0
+  .carousel-demo .hero-media
+    width: min(85%, 460px)
+  .panorama-scene-bar
+    align-items: start
+    flex-direction: column
+  .panorama-stage
+    height: min(64vh, 520px)
+  .panorama-bottomline
+    justify-content: flex-end
+  .panorama-hint
+    display: none
+  .effect-workbench
+    grid-template-columns: 1fr
+  .effect-preview
+    min-height: 380px
+  .effect-controls
+    padding: 25px
+
+@media (max-width: 520px)
+  .standard-page .lab-module-section
+    margin-inline: -18px
+    padding-inline: 18px
+  .carousel-demo .hero-media
+    width: min(90%, 460px)
+  .panorama-stage
+    height: 440px
+  .panorama-scene-menu
+    top: 14px
+    left: 14px
+    width: 180px
+  .panorama-menu-option
+    min-height: 40px
+    font-size: rem(11)
+  .panorama-map-spot span
+    font-size: rem(9)
+  .panorama-floorplan
+    bottom: 14px
+    left: 14px
+    width: 126px
+    &.is-open
+      width: min(190px, calc(100% - 28px))
+  .panorama-bottomline
+    align-items: end
+  .panorama-controls
+    flex-direction: column
+  .panorama-hint
+    max-width: 135px
+    line-height: 1.5
+  .panorama-controls button
+    width: 35px
+    height: 35px
+  .panorama-hotspot-icon
+    width: 42px
+    height: 42px
+  .effect-preview
+    min-height: 300px
+  .effect-option
+    grid-template-columns: 24px 1fr 70px 18px
+    gap: 6px
+  .gallery-image
+    aspect-ratio: 4 / 3.6
