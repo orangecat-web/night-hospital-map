@@ -21,10 +21,13 @@ const district = ref(initial.district)
 const onlyAllDay = ref(initial.allDay)
 const onlyEmergency = ref(initial.emergency)
 const selectedId = ref(hospitals[0].id)
+const mobileMedia = window.matchMedia('(max-width: 850px)')
+const isMobile = ref(mobileMedia.matches)
+const mapOpen = ref(false)
+const mapDialog = ref(null)
 const mapSection = ref(null)
-const resultsSection = ref(null)
-const resultsHeading = ref(null)
 let toolLifecycle
+let returnFocus
 
 const districts = computed(() => directory.districts(city.value))
 const currentQuery = computed(() => ({ keyword: keyword.value, city: city.value, district: district.value, allDay: onlyAllDay.value, emergency: onlyEmergency.value }))
@@ -49,21 +52,36 @@ const activeFilters = computed(() => [
 ].filter(Boolean))
 const selected = computed(() => filtered.value.find((item) => item.id === selectedId.value) ?? filtered.value[0] ?? null)
 async function viewMap() {
+  if (isMobile.value) {
+    if (!selected.value || mapOpen.value) return
+    returnFocus = document.activeElement
+    mapOpen.value = true
+    await nextTick()
+    mapDialog.value?.showModal()
+    return
+  }
   await nextTick()
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
   mapSection.value?.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'start' })
 }
 
-async function viewResults() {
-  await nextTick()
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  resultsSection.value?.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'start' })
-  resultsHeading.value?.focus({ preventScroll: true })
-}
-
 function selectHospital(id) {
   selectedId.value = id
-  if (window.matchMedia('(max-width: 850px)').matches) viewMap()
+  if (isMobile.value) viewMap()
+}
+
+function closeMap() {
+  mapDialog.value?.close()
+}
+
+function onMapClosed() {
+  mapOpen.value = false
+  nextTick(() => returnFocus?.isConnected && returnFocus.focus())
+}
+
+function syncViewport(event) {
+  isMobile.value = event.matches
+  if (!event.matches && mapOpen.value) closeMap()
 }
 
 function clearFilters() {
@@ -92,6 +110,7 @@ function restoreFromUrl() {
 }
 
 onMounted(() => {
+  mobileMedia.addEventListener('change', syncViewport)
   window.addEventListener('popstate', restoreFromUrl)
   const context = document.modelContext
   if (!context?.registerTool) return
@@ -126,6 +145,7 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
+  mobileMedia.removeEventListener('change', syncViewport)
   window.removeEventListener('popstate', restoreFromUrl)
   toolLifecycle?.abort()
 })
@@ -153,9 +173,9 @@ onUnmounted(() => {
           FilterChip(:pressed="false" label="目前營業中" :disabled="true")
         p.filter-help 暫無可信的即時接診資料，因此不提供「目前營業中」篩選；24 小時不代表此刻可收治。
 
-      .results(ref="resultsSection")
+      .results
         .results-heading
-          h2(ref="resultsHeading" tabindex="-1") 搜尋結果
+          h2 搜尋結果
             span.count(aria-live="polite") {{ filtered.length }} 間已查閱樣本
           button.map-jump(v-if="filtered.length" type="button" @click="viewMap") 查看位置
 
@@ -180,6 +200,9 @@ onUnmounted(() => {
 
         p.data-footnote 名單最後整理：{{ checkedAt }}。各院所查閱日見卡片；未逐一電話確認，假日、滿診與收治動物別請以院所回覆為準。
 
-    div(ref="mapSection")
-      LocationPreview(:hospital="selected" :source="selected ? sourceById.get(selected.sourceId) : null" @back="viewResults")
+    div.desktop-map(ref="mapSection")
+      LocationPreview(v-if="!isMobile" :hospital="selected" :source="selected ? sourceById.get(selected.sourceId) : null")
+
+  dialog.mobile-map-dialog(ref="mapDialog" aria-label="院所地圖" @close="onMapClosed")
+    LocationPreview(v-if="mapOpen" :hospital="selected" :source="selected ? sourceById.get(selected.sourceId) : null" :collapsible="true" @back="closeMap")
 </template>

@@ -84,12 +84,16 @@ button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible
 .main-layout
   max-width: 1600px
   margin: auto
+  height: calc(100dvh - 68px)
   display: grid
   grid-template-columns: minmax(390px, 43%) minmax(0, 1fr)
-  align-items: start
+  align-items: stretch
 
 .list-pane
+  display: flex
+  flex-direction: column
   min-width: 0
+  min-height: 0
   background: #f8faf9
   border-right: 1px solid #e0e9e7
 
@@ -155,6 +159,11 @@ button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible
   line-height: 1.55
 
 .results
+  flex: 1
+  min-height: 0
+  overflow-y: auto
+  overscroll-behavior: contain
+  scrollbar-gutter: stable
   padding: 20px clamp(14px, 2.4vw, 30px) 32px
   scroll-margin-top: 12px
 
@@ -382,6 +391,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible
   position: sticky
   top: 0
   min-width: 0
+  height: 100%
   padding: 20px
   background: #fff
   scroll-margin-top: 14px
@@ -410,6 +420,32 @@ button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible
   color: #0b716c
   font-size: .84rem
   font-weight: 750
+
+.map-info-toggle
+  display: none
+  min-height: 36px
+  margin-left: auto
+  padding: 5px 9px
+  border: 1px solid #b8d9d3
+  border-radius: 7px
+  background: #fff
+  color: #0b716c
+  font-size: .84rem
+  font-weight: 750
+  white-space: nowrap
+
+.mobile-map-dialog
+  width: min(760px, calc(100vw - 24px))
+  max-width: none
+  max-height: calc(100dvh - 24px)
+  padding: 0
+  overflow: auto
+  border: 0
+  border-radius: 15px
+  box-shadow: 0 18px 60px #142d3040
+
+  &::backdrop
+    background: #102c36a8
 
 .map-stage
   position: relative
@@ -679,18 +715,30 @@ button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible
 @media (max-width: 850px)
   .main-layout
     display: block
+    height: auto
 
   .list-pane
     border-right: 0
 
+  .results
+    overflow: visible
+    scrollbar-gutter: auto
+
+  .desktop-map
+    display: none
+
   .map-pane
     position: static
+    height: auto
     padding: 20px 14px 28px
 
   .map-stage
     min-height: 390px
 
   .map-back
+    display: inline-block
+
+  .map-info-toggle
     display: inline-block
 
   .sources-intro
@@ -702,6 +750,15 @@ button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible
 
   .source-group:first-child
     grid-row: span 2
+
+@media (min-width: 851px) and (max-height: 720px)
+  .list-pane
+    overflow-y: auto
+
+  .results
+    flex: none
+    overflow: visible
+    scrollbar-gutter: auto
 
 @media (max-width: 520px)
   .site-header

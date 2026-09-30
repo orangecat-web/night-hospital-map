@@ -18,7 +18,7 @@ Vue 3 + Vite 的動物急診查詢作品，Pug template 與縮排式 Sass。查�
 - `packages/orange-vue-components` 是獨立 npm 專案，可複製到其他 Vue 3 + Vite 專案，用 `file:` 安裝。含通用欄位、篩選、來源連結、分享網址、距離計算與清單查詢物件。
 - `src/domain/HospitalDirectory.js` 繼承通用清單類別，只處理動物醫院的篩選規則。
 - `src/components/HospitalCard.vue` 與 `LocationPreview.vue` 是此案專用的展示元件。
-- 手機版點選院所會跳到位置資訊，並可返回搜尋結果；桌機維持左清單、右位置區。
+- 桌機上方查詢條件固定在左欄，搜尋結果在左欄獨立捲動，右欄顯示地圖；手機版點選院所會開啟可關閉的地圖視窗，院所資訊卡預設收起，可按「顯示資訊」展開，關閉地圖後回到原先的院所卡片。
 - Sass 模組與 Vue SFC 的 Pug／Sass 寫法延續既有切版習慣。新功能先判斷是否跨案共用，再放入元件專案或此案的 `domain/`。
 
 ## 後續待辦：附近院所（暫緩）
