@@ -1,0 +1,24 @@
+[
+  {
+    "id": "moa-registry",
+    "label": "農業部・獸醫師（佐）開業執照",
+    "url": "https://data.gov.tw/dataset/8705",
+    "endpoint": "https://data.moa.gov.tw/Service/OpenData/DataFileService.aspx?UnitId=078",
+    "adapter": "moa",
+    "enabled": true,
+    "license": "政府資料開放授權條款－第 1 版",
+    "updateFrequency": "每半年",
+    "note": "僅收錄狀態為開業的紀錄；開業執照狀態不代表今日營業或提供夜間急診。"
+  },
+  {
+    "id": "ntpc-registry",
+    "label": "新北市政府・動物醫院一覽表",
+    "url": "https://data.ntpc.gov.tw/datasets/de4cfd62-e977-4c4f-822f-7d2aa65f6e4a",
+    "endpoint": "https://data.ntpc.gov.tw/api/datasets/de4cfd62-e977-4c4f-822f-7d2aa65f6e4a/json",
+    "adapter": "ntpc",
+    "enabled": false,
+    "license": "政府資料開放授權條款－第 1 版",
+    "updateFrequency": "每年",
+    "note": "2026-10-06 測試回傳 HTML，預設停用；介接恢復且確認資料格式後再啟用。"
+  }
+]

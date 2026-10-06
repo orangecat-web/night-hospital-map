@@ -1,4 +1,5 @@
 <script setup>
+// 以原生 details／summary 提供詳情收合，保留鍵盤操作與語意。
 defineProps({ label: { type: String, required: true } })
 </script>
 

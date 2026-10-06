@@ -1,4 +1,5 @@
 <script setup>
+// 顯示查閱日與需要重新確認的提示；不得拿 API 擷取日期冒充官網查閱。
 import { computed } from 'vue'
 import { SourceFreshness } from '../core/SourceFreshness.js'
 

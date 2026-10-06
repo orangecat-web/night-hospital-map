@@ -1,4 +1,10 @@
+# 不提交套件安裝目錄與每次建置產物。
 node_modules
 dist
+# 開發執行環境與個人設定。
 .sites-runtime
 .env
+.env.*
+!.env.example
+# 同步資料時未完成的暫存檔不應提交。
+public/data/*.tmp

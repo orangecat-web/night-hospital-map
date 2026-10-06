@@ -1,4 +1,5 @@
 <script setup>
+// 資料來源外部連結；可選查閱日期，政府名冊沒有人工查閱日就不顯示。
 defineProps({ label: { type: String, required: true }, href: { type: String, required: true }, checkedAt: { type: String, default: '' } })
 </script>
 

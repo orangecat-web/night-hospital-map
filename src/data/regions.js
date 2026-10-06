@@ -1,5 +1,4 @@
-// Every municipality, county and city in Taiwan remains selectable even when
-// the reviewed sample has no matching hospital yet.
+// 縣市選單保留全台 22 縣市，即使某地區暫時没有名冊或夜間查閱資料仍可選取。
 export const taiwanCities = [
   '臺北市', '新北市', '基隆市', '桃園市', '新竹市', '新竹縣', '苗栗縣',
   '臺中市', '彰化縣', '南投縣', '雲林縣', '嘉義市', '嘉義縣',

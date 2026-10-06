@@ -1,4 +1,5 @@
 <script setup>
+// 可按下或停用的篩選按鈕；狀態由父層傳入，更新透過 emit 交回父層。
 defineProps({ label: { type: String, required: true }, pressed: { type: Boolean, default: false }, disabled: { type: Boolean, default: false } })
 const emit = defineEmits(['update:pressed'])
 </script>

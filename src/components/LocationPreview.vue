@@ -3,14 +3,17 @@ import { computed, ref } from 'vue'
 import { ContactLinks, MapEmbed, SourceLink } from '@orangecat/vue-components'
 import mapEmbeds from '../data/map-embeds.json'
 
+// 已有分享嵌入連結的院所沿用免費 iframe；新名冊沒有連結時顯示地址與外開導航。
 const props = defineProps({
   hospital: { type: Object, default: null },
   source: { type: Object, default: null },
   collapsible: { type: Boolean, default: false },
 })
 const emit = defineEmits(['back'])
+// 手機資訊卡預設隱藏，有需要才由使用者展開。
 const infoOpen = ref(!props.collapsible)
 const map = new MapEmbed(import.meta.env.VITE_GOOGLE_MAPS_EMBED_KEY)
+// 不以未核對的座標或自動猜測地圖取代地址查核。
 const mapUrl = computed(() => props.hospital
   ? mapEmbeds[props.hospital.id] ?? map.place(props.hospital.address)
   : null)

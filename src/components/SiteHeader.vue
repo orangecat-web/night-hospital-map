@@ -1,4 +1,5 @@
 <script setup>
+// 使用相對連結，同時支援首頁、資料來源頁與子目錄部署。
 defineProps({ current: { type: String, default: 'directory' } })
 </script>
 
@@ -10,5 +11,5 @@ header.site-header
   nav.site-nav(aria-label="主要導覽")
     a(:href="current === 'sources' ? '../' : './'" :aria-current="current === 'directory' ? 'page' : undefined") 查詢院所
     a(:href="current === 'sources' ? './' : './sources/'" :aria-current="current === 'sources' ? 'page' : undefined") 資料來源
-  .demo-badge 資料樣本版
+  .demo-badge v1.1・公益作品
 </template>

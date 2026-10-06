@@ -1,4 +1,5 @@
 <script setup>
+// 共用元件展示頁：用虛構資料練習篩選、分享與來源顯示，不含正式院所。
 import { computed, ref } from 'vue'
 import { DirectoryCollection, DirectoryQueryState, SearchField, RegionPicker, FilterChip, FilterSummary, ShareLinkButton, DetailDisclosure, VerificationNotice, SourceLink } from '../src/index.js'
 

@@ -1,4 +1,5 @@
 <script setup>
+// 縣市、行政區連動；換縣市先清空舊行政區，避免無法配對的條件。
 defineProps({ city: { type: String, default: '' }, district: { type: String, default: '' }, cities: { type: Array, default: () => [] }, districts: { type: Array, default: () => [] } })
 const emit = defineEmits(['update:city', 'update:district'])
 function setCity(value) {

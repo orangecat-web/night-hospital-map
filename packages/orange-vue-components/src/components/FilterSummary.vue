@@ -1,4 +1,5 @@
 <script setup>
+// 列出已生效的篩選条件，提供逐項移除與全部清除事件。
 defineProps({ filters: { type: Array, default: () => [] } })
 const emit = defineEmits(['remove', 'clear'])
 </script>

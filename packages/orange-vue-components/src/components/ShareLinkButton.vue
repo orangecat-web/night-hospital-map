@@ -1,4 +1,5 @@
 <script setup>
+// 優先使用剪貼簿 API；沒有權限時顯示可手動複製的輸入框。
 import { nextTick, ref } from 'vue'
 
 const props = defineProps({ url: { type: String, required: true }, label: { type: String, default: '複製查詢連結' } })

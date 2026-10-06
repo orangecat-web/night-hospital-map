@@ -1,0 +1,40 @@
+{
+  "description": "JSON 不能寫程式註解，此檔集中說明欄位。這是維護文件，不是可匯入的院所資料。",
+  "localHospital": {
+    "id": "人工管理的穩定院所 ID，同時對應 map-embeds.json 的地圖分享連結。",
+    "name": "官網查閱的院所名稱／分院名稱。",
+    "city": "臺字寫法的縣市，須對應 regions.js。",
+    "district": "行政區；不可用行政區中心點冒充院所座標。",
+    "address": "人工查閱的地址，API 合併保留此欄位以對應已核對的地圖。",
+    "phone": "人工查閱的聯絡電話。",
+    "allDay": "true = 公告全天急診；false = 不是全天急診；官方名冊未提供時為 null。",
+    "emergency": "true = 人工查閱確認有急診公告；政府名冊未提供時為 null。",
+    "openNow": "一律 null，沒有可驗證的即時接診來源。",
+    "nightHours": "官網公告時段，非即時接診狀態。",
+    "nightDays": "夜間急診適用日期文字，可省略。",
+    "species": "官網公告的動物別或需向院所確認的說明。",
+    "note": "人工查閱備註。",
+    "sourceId": "對應 sources.js 的官網來源 ID。",
+    "checkedAt": "最後人工查閱日期，API 擷取不會改寫此欄位。"
+  },
+  "generatedFields": {
+    "nightVerified": "合併時計算，僅人工 JSON 有急診或夜間公告才能為 true。",
+    "registrySourceIds": "匹配到的政府名冊來源，可有多個。",
+    "registry": "政府名稱、地址、電話、執照字號的對照資訊；不覆蓋人工欄位。",
+    "licenseNumber": "政府開業執照字號。",
+    "registryStatus": "政府原始執照狀態，與今日營業／即時接診不同。",
+    "phoneRaw": "官方電話原始文字，無法安全轉 tel: 時保留供人工核對。"
+  },
+  "apiSources": {
+    "enabled": "是否真的呼叫來源；尚無法讀到 JSON 的來源維持 false。",
+    "adapter": "moa／ntpc 的欄位轉換器。",
+    "endpoint": "API JSON 端點，可在來源變動後修改。",
+    "url": "資料集說明頁與來源歸屬。"
+  },
+  "snapshot": {
+    "schemaVersion": "快照格式版本，與網站版本不同。",
+    "sources": "各來源的正規化名冊。",
+    "fetchedAt": "成功擷取 API 的 UTC ISO 時間，畫面轉為台灣時間；不是官方資料更新日。",
+    "rawCount": "API 原始紀錄筆數，與篩選後可顯示筆數不同。"
+  }
+}

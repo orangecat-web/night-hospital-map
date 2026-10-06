@@ -1,11 +1,13 @@
+// 將 API 設定也加入來源頁與卡片來源查詢；JSON 欄位註解見 data-schema.json。
+import apiSources from './api-sources.json' with { type: 'json' }
+
 export const checkedAt = '2026-09-30'
 
-// The directory homepage links each hospital to its specific source; this
-// content is rendered on the separate data-sources page.
+// 官網查閱日期與政府名冊擷取時間分開管理；來源總表放在獨立頁面。
 export const sourcePolicy = {
   title: '資料來源與查核方式',
-  description: '全台縣市皆可查詢，但目前僅收錄已逐筆查閱院所公告的部分院所。政府名冊可協助核對開業與名單；整理文章及 Google 地圖搜尋可作為候選線索，不能單獨證明此刻營業或收治急診。',
-  updatedNote: `名單最後整理：${checkedAt}。每筆院所的查閱日期見卡片；來源頁面更新不等於本站同步更新。`,
+  description: '以政府 API 名冊提供院所基本資料，再合併人工查閱的夜間急診 JSON。名冊沒有夜間或即時接診欄位；整理文章與 Google 地圖搜尋僅作候選線索。',
+  updatedNote: `名單最後整理：${checkedAt}。每筆院所的查閱日期見卡片；名冊擷取時間另列於查詢頁；API 更新不會重新查核夜間服務。`,
   roles: ['院所核對', '政府名冊', '候選線索'],
   roleDescriptions: {
     院所核對: '院所網站上的急診、聯絡方式與地址，是本站院所卡片的主要依據。',
@@ -13,13 +15,14 @@ export const sourcePolicy = {
     候選線索: '整理文章與 Google 地圖搜尋可協助找院所，收錄前仍需回到院所公告核對。',
   },
   method: [
-    { title: '發現候選院所', description: '政府名冊、整理文章與 Google 地圖搜尋可提供待查名單；收錄前逐筆查閱院所官網。' },
-    { title: '查閱院所官網', description: '比對院所名稱、地址、電話及官網公告的 24 小時／急診資訊。' },
-    { title: '標示查閱時間', description: '保留來源連結與查閱日期。尚未逐一電話確認，也沒有即時接診資料。' },
+    { title: '取得政府名冊', description: '呼叫農業部開業執照 API，清洗縣市、地址、電話及開業狀態；新北來源尚未啟用。API 失敗時保留快照或人工 JSON。' },
+    { title: '合併人工夜間資料', description: '比對縣市、建物地址及名稱／電話，保留官網查閱的 24 小時、急診、動物別與來源。不單靠院所名稱或電話合併分院。' },
+    { title: '分開標示資料時間', description: '政府資料列出 API 擷取時間，夜間資訊保留人工查閱日；兩者都不代表已電話確認或即時接診。' },
   ],
 }
 
 export const sources = [
+  ...apiSources.map((source) => ({ ...source, role: '政府名冊' })),
   { id: 'daan-official', label: '大安動物醫院・24 小時急診', url: 'https://daan-vet.com/24h/', role: '院所核對' },
   { id: 'boulderyard-official', label: '布達羊急診動物醫院官網', url: 'https://www.boulderyard24.com/', role: '院所核對' },
   { id: 'national-taipei-official', label: '全國動物醫院・台北分院', url: 'https://www.vet.com.tw/store_detail.php?Key=3', role: '院所核對' },

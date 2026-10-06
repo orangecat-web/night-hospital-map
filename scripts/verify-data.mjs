@@ -1,3 +1,4 @@
+// 人工資料驗證：來源、地圖、聯絡與篩選規則不可漏；API 合併驗證另外放在 tests。
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { DirectoryCollection } from '../packages/orange-vue-components/src/core/DirectoryCollection.js'

@@ -1,3 +1,4 @@
+// 通用唯讀資料清單：建立副本避免外部修改；處理文字、縣市、行政區與自訂條件。
 export class DirectoryCollection {
   constructor(records, { searchFields = ['name'], cityField = 'city', districtField = 'district' } = {}) {
     this.records = Object.freeze(records.map((record) => Object.freeze({ ...record })))

@@ -1,3 +1,4 @@
+// 共用套件的公開介面；各案由此匯入元件與核心工具。
 export { default as SearchField } from './components/SearchField.vue'
 export { default as RegionPicker } from './components/RegionPicker.vue'
 export { default as FilterChip } from './components/FilterChip.vue'

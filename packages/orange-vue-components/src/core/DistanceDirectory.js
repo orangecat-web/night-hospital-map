@@ -1,3 +1,4 @@
+// 距離工具僅計算已核對座標的直線距離；本案 v1.1 仍未開放附近院所。
 const radians = (degrees) => degrees * Math.PI / 180
 
 export class DistanceDirectory {

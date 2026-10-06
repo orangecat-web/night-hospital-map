@@ -1,3 +1,4 @@
+// 把篩選條件與 URL 互相轉換；只接受合法地區並限制搜尋字串長度。
 const keys = ['q', 'city', 'district', 'allDay', 'emergency']
 
 export class DirectoryQueryState {

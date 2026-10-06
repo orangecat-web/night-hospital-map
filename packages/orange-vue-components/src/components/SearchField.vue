@@ -1,4 +1,5 @@
 <script setup>
+// 受控搜尋輸入；使用 v-model 更新字串，不直接碰資料來源。
 defineProps({ modelValue: { type: String, default: '' }, label: { type: String, default: '搜尋' }, placeholder: { type: String, default: '' } })
 const emit = defineEmits(['update:modelValue'])
 </script>

@@ -1,7 +1,9 @@
 <script setup>
+import apiSources from './data/api-sources.json'
 import SiteHeader from './components/SiteHeader.vue'
 import { checkedAt, sourcePolicy, sources } from './data/sources'
 
+// 按用途分組，讓訪客區分院所公告、政府名冊與待核對線索。
 const groups = sourcePolicy.roles.map((role) => ({
   role,
   description: sourcePolicy.roleDescriptions[role],
@@ -25,6 +27,16 @@ const groups = sourcePolicy.roles.map((role) => ({
           span 本站沒有即時接診狀態；假日、滿診、收治動物別及收費，請以院所當下回覆為準。
 
     .sources-content
+      section.method-section(aria-labelledby="api-title")
+        .section-heading
+          h2#api-title 政府資料介接
+          span v1.1
+        ul.api-source-list
+          li(v-for="source in apiSources" :key="source.id")
+            strong {{ source.label }}・{{ source.enabled ? '已啟用' : '尚未啟用' }}
+            p {{ source.note }}
+            p 授權：{{ source.license }}・來源更新頻率：{{ source.updateFrequency }}
+        p API 擷取只更新名冊，不會自動重新查核夜間時段或 Google 地圖分享連結。
       section.method-section(aria-labelledby="method-title")
         .section-heading
           h2#method-title 本站如何整理資料

@@ -1,3 +1,4 @@
+// 選用的 Google Maps Embed API 工具；本案既有分享 iframe 無須使用這個 key。
 // Google Maps Embed API requires a browser-restricted key. No key means no iframe.
 export class MapEmbed {
   constructor(apiKey = '') {
