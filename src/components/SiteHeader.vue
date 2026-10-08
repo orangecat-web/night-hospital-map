@@ -11,5 +11,5 @@ header.site-header
   nav.site-nav(aria-label="主要導覽")
     a(:href="current === 'sources' ? '../' : './'" :aria-current="current === 'directory' ? 'page' : undefined") 查詢院所
     a(:href="current === 'sources' ? './' : './sources/'" :aria-current="current === 'sources' ? 'page' : undefined") 資料來源
-  .demo-badge v1.1・公益作品
+  .demo-badge v1.2・公益作品
 </template>

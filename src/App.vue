@@ -77,6 +77,12 @@ const activeFilters = computed(() => [
   onlyAllDay.value && { key: 'allDay', label: '24 小時' },
   onlyEmergency.value && { key: 'emergency', label: '提供急診' },
 ].filter(Boolean))
+// 搜尋收起後仍顯示範圍與條件；沿用停車作品的原生 details，不卸載輸入元件。
+const searchSummary = computed(() => [
+  scope.value === 'night' ? '已查閱夜間院所' : '全部院所名冊',
+  ...activeFilters.value.map((filter) => filter.label),
+].join(' · '))
+
 const selected = computed(() => filtered.value.find((item) => item.id === selectedId.value) ?? visibleHospitals.value[0] ?? null)
 
 async function viewMap() {
@@ -186,17 +192,26 @@ onUnmounted(() => {
         .caution(role="note")
           span.caution-icon(aria-hidden="true") i
           span 政府名冊僅提供院所基本資料，夜間急診資訊另行查閱；出發前請先致電。
-      .search-panel
-        .scope-switch(role="group" aria-label="查詢範圍")
-          button(type="button" :aria-pressed="scope === 'night'" @click="scope = 'night'") 已查閱夜間院所
-          button(type="button" :aria-pressed="scope === 'all'" @click="scope = 'all'") 全部院所名冊
-        RegionPicker(v-model:city="city" v-model:district="district" :cities="cities" :districts="districts")
-        SearchField.search-field(v-model="keyword" label="搜尋院所" placeholder="輸入院所名稱或地區")
-        .filter-row(aria-label="篩選條件")
-          FilterChip(:pressed="onlyAllDay" label="24 小時" @update:pressed="onlyAllDay = $event")
-          FilterChip(:pressed="onlyEmergency" label="提供急診" @update:pressed="onlyEmergency = $event")
-          FilterChip(:pressed="false" label="目前營業中" :disabled="true")
-        p.filter-help 沒有即時接診資料；名冊開業狀態與 24 小時公告都不代表此刻可收治。
+      //- 預設收合，summary 支援滑鼠、Enter 與空白鍵；查詢值在收合時保留。
+      details.search-panel
+        summary.search-toggle(aria-controls="hospital-search-controls")
+          .search-toggle-copy
+            strong 搜尋與篩選
+            span(:title="searchSummary") {{ searchSummary }}
+          span.search-toggle-state(aria-hidden="true")
+            span.when-closed 展開 ＋
+            span.when-open 收起 −
+        #hospital-search-controls.search-controls
+          .scope-switch(role="group" aria-label="查詢範圍")
+            button(type="button" :aria-pressed="scope === 'night'" @click="scope = 'night'") 已查閱夜間院所
+            button(type="button" :aria-pressed="scope === 'all'" @click="scope = 'all'") 全部院所名冊
+          RegionPicker(v-model:city="city" v-model:district="district" :cities="cities" :districts="districts")
+          SearchField.search-field(v-model="keyword" label="搜尋院所" placeholder="輸入院所名稱或地區")
+          .filter-row(aria-label="篩選條件")
+            FilterChip(:pressed="onlyAllDay" label="24 小時" @update:pressed="onlyAllDay = $event")
+            FilterChip(:pressed="onlyEmergency" label="提供急診" @update:pressed="onlyEmergency = $event")
+            FilterChip(:pressed="false" label="目前營業中" :disabled="true")
+          p.filter-help 沒有即時接診資料；名冊開業狀態與 24 小時公告都不代表此刻可收治。
       //- 可捲動結果區含狀態、分頁與卡片，避免名冊增加後擠壓桌機地圖。
       .results
         DataStatus(:state="state" :loading="loading" :label="statusLabel" @refresh="load()")

@@ -145,7 +145,8 @@ button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible
 
 // 地區、關鍵字與服務篩選區。
 .search-panel
-  padding: 17px clamp(20px, 3vw, 38px) 19px
+  flex: 0 0 auto
+  border-bottom: 1px solid #e0e9e7
   background: #fff
 
 .search-field
@@ -723,6 +724,63 @@ button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible
   display: inline-block
   margin-top: 24px
 
+// v1.2：搜尋預設收合；展開內容自行捲動，收合摘要保留目前條件。
+.search-toggle
+  display: flex
+  align-items: center
+  justify-content: space-between
+  gap: 12px
+  padding: 15px clamp(20px, 3vw, 38px)
+  cursor: pointer
+  list-style: none
+
+  &::-webkit-details-marker
+    display: none
+
+  &:focus-visible
+    outline: 3px solid #78c7be
+    outline-offset: -3px
+
+.search-toggle-copy
+  min-width: 0
+
+  strong, span
+    display: block
+
+  strong
+    font-size: .96rem
+
+  span
+    margin-top: 5px
+    color: #65777b
+    font-size: .77rem
+    overflow: hidden
+    text-overflow: ellipsis
+    white-space: nowrap
+
+.search-toggle-state
+  flex-shrink: 0
+  color: #0b716c
+  font-size: .82rem
+  font-weight: 750
+
+.when-open
+  display: none
+
+.search-panel[open]
+  .when-open
+    display: inline
+
+  .when-closed
+    display: none
+
+.search-controls
+  max-height: min(35dvh, 340px)
+  overflow-y: auto
+  overscroll-behavior: contain
+  scrollbar-gutter: stable
+  padding: 4px clamp(20px, 3vw, 38px) 19px
+
 // 手機改為單欄，地圖使用彈窗，取消桌機獨立捲動限制。
 @media (max-width: 850px)
   .main-layout
@@ -763,15 +821,17 @@ button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible
   .source-group:first-child
     grid-row: span 2
 
-// 桌機高度較小時縮減留白，保留可用的清單捲動空間。
+// 矮視窗縮短說明與搜尋區；列表仍獨立捲動，避免搜尋按鈕被捲走。
 @media (min-width: 851px) and (max-height: 720px)
-  .list-pane
-    overflow-y: auto
+  .intro
+    padding-top: 14px
+    padding-bottom: 10px
 
-  .results
-    flex: none
-    overflow: visible
-    scrollbar-gutter: auto
+  .caution
+    margin-top: 10px
+
+  .search-controls
+    max-height: min(28dvh, 220px)
 
 @media (max-width: 520px)
   .site-header
@@ -803,9 +863,6 @@ button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible
 
   .intro h1
     font-size: 1.56rem
-
-  .search-panel
-    padding: 14px 20px 17px
 
   .results
     padding: 19px 14px 26px
