@@ -2,12 +2,14 @@
 import { computed, ref } from 'vue'
 import { ContactLinks, MapEmbed, SourceLink } from '@orangecat/vue-components'
 import mapEmbeds from '../data/map-embeds.json'
+import { directionsFromLocation } from '../services/locationLinks.js'
 
 // 已有分享嵌入連結的院所沿用免費 iframe；新名冊沒有連結時顯示地址與外開導航。
 const props = defineProps({
   hospital: { type: Object, default: null },
   source: { type: Object, default: null },
   collapsible: { type: Boolean, default: false },
+  location: { type: Object, default: null },
 })
 const emit = defineEmits(['back'])
 // 手機資訊卡預設隱藏，有需要才由使用者展開。
@@ -39,6 +41,6 @@ section.map-pane(aria-label="院所位置")
       span(v-if="hospital.nightHours") 夜間急診 {{ hospital.nightHours }}{{ hospital.nightDays ? `・${hospital.nightDays}` : '' }}
       .selection-actions
         a(:href="ContactLinks.search(`${hospital.name} ${hospital.address}`)" target="_blank" rel="noopener noreferrer") 在 Google 地圖查看
-        a(:href="ContactLinks.directions(hospital.address)" target="_blank" rel="noopener noreferrer") 路線導航
+        a(:href="directionsFromLocation(hospital.address, location)" target="_blank" rel="noopener noreferrer") {{ location ? '從目前位置導航' : '路線導航' }}
       SourceLink(v-if="source" :label="source.label" :href="source.url" :checked-at="hospital.checkedAt")
 </template>

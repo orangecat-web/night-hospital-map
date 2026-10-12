@@ -152,6 +152,61 @@ button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible
 .search-field
   margin-top: 13px
 
+// GPS 操作獨立於收合搜尋面板，手機與鍵盤使用者都可直接定位。
+.gps-panel
+  flex: 0 0 auto
+  padding: 12px clamp(20px, 3vw, 38px)
+  border-bottom: 1px solid #e0e9e7
+  background: #fff
+
+.gps-actions, .gps-links
+  display: flex
+  flex-wrap: wrap
+  align-items: center
+  gap: 8px 14px
+
+.gps-button, .gps-clear
+  min-height: 40px
+  padding: 8px 12px
+  border: 1px solid #b8d9d3
+  border-radius: 8px
+  background: #e8f5f2
+  color: #096d65
+  font-size: .86rem
+  font-weight: 750
+
+  &:focus-visible
+    outline: 3px solid #78c7be
+    outline-offset: 2px
+
+  &:disabled
+    opacity: .6
+    cursor: wait
+
+.gps-clear
+  background: #fff
+
+.gps-status p, .gps-help
+  margin: 7px 0 0
+  color: #536b70
+  font-size: .78rem
+  line-height: 1.55
+  overflow-wrap: anywhere
+
+.gps-status .gps-error
+  color: #92521e
+
+.gps-help
+  font-size: .73rem
+
+.gps-links
+  margin-top: 8px
+
+  a
+    color: #096d65
+    font-size: .8rem
+    text-underline-offset: 3px
+
 .filter-row
   display: flex
   flex-wrap: wrap
