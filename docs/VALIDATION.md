@@ -1,3 +1,12 @@
+# v1.3 驗證紀錄
+
+- 2026-10-13：npm run test（16 項）、npm run verify:data（23 筆）、npm run build 均通過。
+- Chromium 1280×900 與 390×844：成功定位、更新座標、卡片／桌機／手機彈窗導航起點、清除位置、手機無橫向溢出均通過。
+- 瀏覽器真實 geolocation 權限拒絕後保留手動導航；模擬無回呼驗證 15 秒逾時，取消後忽略延遲成功回呼。
+- 模擬時間前進驗證五分鐘失效，清除導航起點；GPS 未写入查詢網址或 localStorage。
+- 定位成功測試使用 Chromium 裝置座標模擬，不代表實測手機 GPS 硬體或移動中的精度。地圖第三方 iframe 與政府 API 在此功能測試中攔截，未驗證 Google 實際行車路線。
+- 共用檔與 orangecat-ui 1.2.0 的 src/utils/geolocation.js 內容逐位元相同。元件庫另完成鎖檔 npm ci、13 項單元測試、套件／示範建置與真正 tarball 的隔離消費建置及 GPS 入口驗證。
+
 # v1.2 驗證紀錄
 
 - 2026-10-09：npm run build、npm run test（13 項）、npm run verify:data（23 筆）均通過。

@@ -2,9 +2,10 @@
 import { computed } from 'vue'
 import { ContactLinks, DetailDisclosure, SourceLink, VerificationNotice } from '@orangecat/vue-components'
 import { normalizePhone } from '../services/registryNormalizer.js'
+import { directionsFromLocation } from '../services/locationLinks.js'
 
 // 展示元件只接收統一格式，不直接呼叫 API；父層決定資料來源與選取狀態。
-const props = defineProps({ hospital: { type: Object, required: true }, source: { type: Object, default: null }, registrySources: { type: Array, default: () => [] }, selected: { type: Boolean, default: false } })
+const props = defineProps({ hospital: { type: Object, required: true }, source: { type: Object, default: null }, registrySources: { type: Array, default: () => [] }, location: { type: Object, default: null }, selected: { type: Boolean, default: false } })
 const emit = defineEmits(['select'])
 // 無電話、短碼或格式不明時不產生撥號連結；保留原始文字供人工核對。
 const callNumber = computed(() => normalizePhone(props.hospital.phone))
@@ -36,7 +37,7 @@ article.hospital-card(:class="{ selected }")
   .card-actions
     a.call-button(v-if="callNumber" :href="ContactLinks.phone(callNumber)" :aria-label="`撥打 ${hospital.name} ${hospital.phone}`") 致電 {{ hospital.phone }}
     span.phone-unavailable(v-else) {{ hospital.phoneRaw ? `電話待核對：${hospital.phoneRaw}` : '名冊未提供電話' }}
-    a.route-button(:href="ContactLinks.directions(hospital.address)" target="_blank" rel="noopener noreferrer" :aria-label="`以 Google 地圖導航至 ${hospital.name}`") 導航
+    a.route-button(:href="directionsFromLocation(hospital.address, location)" target="_blank" rel="noopener noreferrer" :aria-label="`以 Google 地圖${location ? '從目前位置' : ''}導航至 ${hospital.name}`") {{ location ? '從目前位置導航' : '導航' }}
   DetailDisclosure(label="院所詳情與資料確認")
     dl.hospital-details
       div

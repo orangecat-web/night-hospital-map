@@ -5,6 +5,8 @@ import HospitalCard from './components/HospitalCard.vue'
 import LocationPreview from './components/LocationPreview.vue'
 import SiteHeader from './components/SiteHeader.vue'
 import DataStatus from './components/DataStatus.vue'
+import GeolocationPanel from './components/GeolocationPanel.vue'
+import { useGeolocation } from './composables/useGeolocation.js'
 import { useHospitals } from './composables/useHospitals.js'
 import { taiwanCities } from './data/regions.js'
 import { checkedAt, sources } from './data/sources.js'
@@ -12,6 +14,7 @@ import { HospitalDirectory } from './domain/HospitalDirectory.js'
 
 // 非同步資料有變動時重建查詢物件；computed 讓卡片數量、地區選單與地圖一起更新。
 const { state, loading, statusLabel, load } = useHospitals()
+const { location, locating, errorCode, locate, clear: clearLocation } = useGeolocation()
 const directory = computed(() => new HospitalDirectory(state.value.records))
 const sourceById = new Map(sources.map((source) => [source.id, source]))
 const cities = taiwanCities
@@ -192,6 +195,7 @@ onUnmounted(() => {
         .caution(role="note")
           span.caution-icon(aria-hidden="true") i
           span 政府名冊僅提供院所基本資料，夜間急診資訊另行查閱；出發前請先致電。
+      GeolocationPanel(:location="location" :locating="locating" :error-code="errorCode" @locate="locate" @clear="clearLocation")
       //- 預設收合，summary 支援滑鼠、Enter 與空白鍵；查詢值在收合時保留。
       details.search-panel
         summary.search-toggle(aria-controls="hospital-search-controls")
@@ -233,15 +237,15 @@ onUnmounted(() => {
           p(v-else) 可以移除篩選或改選鄰近地區；政府名冊與本站查閱資料仍可能有缺漏。
           button.clear-button(v-if="activeFilters.length" type="button" @click="clearFilters") 清除全部條件
         .hospital-list(v-else)
-          HospitalCard(v-for="item in visibleHospitals" :key="item.id" :hospital="item" :source="sourceById.get(item.sourceId)" :registry-sources="item.registrySourceIds.map(id => sourceById.get(id)).filter(Boolean)" :selected="selected?.id === item.id" @select="selectHospital")
+          HospitalCard(v-for="item in visibleHospitals" :key="item.id" :hospital="item" :source="sourceById.get(item.sourceId)" :registry-sources="item.registrySourceIds.map(id => sourceById.get(id)).filter(Boolean)" :location="location" :selected="selected?.id === item.id" @select="selectHospital")
         nav.pagination(v-if="pageCount > 1" aria-label="院所分頁")
           button(type="button" :disabled="page === 1" @click="changePage(page - 1)") 上一頁
           span 第 {{ page }} / {{ pageCount }} 頁
           button(type="button" :disabled="page === pageCount" @click="changePage(page + 1)") 下一頁
         p.data-footnote 夜間資訊最後整理：{{ checkedAt }}。API 擷取不會重設官網查閱日；未逐一電話確認，實際收治請以院所回覆為準。
     div.desktop-map(ref="mapSection")
-      LocationPreview(v-if="!isMobile" :hospital="selected" :source="selected ? sourceById.get(selected.sourceId) : null")
+      LocationPreview(v-if="!isMobile" :hospital="selected" :source="selected ? sourceById.get(selected.sourceId) : null" :location="location")
   //- 手機地圖資訊預設收合，沿用 v1.0 的互動方式。
   dialog.mobile-map-dialog(ref="mapDialog" aria-label="院所地圖" @close="onMapClosed")
-    LocationPreview(v-if="mapOpen" :hospital="selected" :source="selected ? sourceById.get(selected.sourceId) : null" :collapsible="true" @back="closeMap")
+    LocationPreview(v-if="mapOpen" :hospital="selected" :source="selected ? sourceById.get(selected.sourceId) : null" :location="location" :collapsible="true" @back="closeMap")
 </template>
