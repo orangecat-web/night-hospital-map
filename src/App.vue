@@ -187,13 +187,9 @@ onUnmounted(() => {
   SiteHeader(current="directory")
   main.main-layout
     .list-pane
-      //- 導覽說明與服務限制固定可見；政府名冊不會被標成已查核急診。
+      //- 清單上方只保留標題，地區說明與出發提醒放入展開的搜尋面板。
       .intro
         h1 尋找動物急診
-        p 可選全台 22 縣市，目前 {{ reviewedCities.size }} 縣市有已查閱夜間院所；先看資訊，再致電確認是否接診。
-        .caution(role="note")
-          span.caution-icon(aria-hidden="true") i
-          span 政府名冊僅提供院所基本資料，夜間急診資訊另行查閱；出發前請先致電。
       //- 預設收合，summary 支援滑鼠、Enter 與空白鍵；查詢值在收合時保留。
       details.search-panel
         summary.search-toggle(aria-controls="hospital-search-controls")
@@ -204,6 +200,11 @@ onUnmounted(() => {
             span.when-closed 展開 ＋
             span.when-open 收起 −
         #hospital-search-controls.search-controls
+          .search-intro
+            p 可選全台 22 縣市，目前 {{ reviewedCities.size }} 縣市有已查閱夜間院所；先看資訊，再致電確認是否接診。
+            .caution(role="note")
+              span.caution-icon(aria-hidden="true") i
+              span 政府名冊僅提供院所基本資料，夜間急診資訊另行查閱；出發前請先致電。
           .scope-switch(role="group" aria-label="查詢範圍")
             button(type="button" :aria-pressed="scope === 'night'" @click="scope = 'night'") 已查閱夜間院所
             button(type="button" :aria-pressed="scope === 'all'" @click="scope = 'all'") 全部院所名冊
