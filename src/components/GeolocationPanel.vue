@@ -18,9 +18,11 @@ section.gps-panel(aria-label="GPS 目前位置" :aria-busy="locating")
     p(v-if="locating") 正在取得位置，請允許瀏覽器存取裝置位置。
     p.gps-error(v-else-if="errorMessage") {{ errorMessage }}
     p(v-else-if="location") 已取得位置（{{ locatedTime }}），估計誤差約 {{ Math.ceil(location.accuracy) }} 公尺。導航將以此位置為起點。
-    p(v-else) 允許定位後，可從目前位置導航至院所。
-  .gps-links(v-if="location")
-    a(:href="currentLocationMap(location)" target="_blank" rel="noopener noreferrer") 在 Google 地圖查看目前位置 ↗
-    a(:href="nearbyEmergencyMap(location)" target="_blank" rel="noopener noreferrer") 在 Google 地圖搜尋附近動物急診 ↗
-  p.gps-help 單次定位，五分鐘後需更新；位置僅暫存此頁，開啟地圖／導航才傳給 Google。附近搜尋結果請先致電確認。
+  //- 補充資訊按需展開，讓地圖保留更多操作面積。
+  details.gps-details
+    summary {{ location ? '附近搜尋與定位說明' : '定位說明' }}
+    .gps-links(v-if="location")
+      a(:href="currentLocationMap(location)" target="_blank" rel="noopener noreferrer") 在 Google 地圖查看目前位置 ↗
+      a(:href="nearbyEmergencyMap(location)" target="_blank" rel="noopener noreferrer") 在 Google 地圖搜尋附近動物急診 ↗
+    p.gps-help 單次定位，五分鐘後需更新；位置僅暫存此頁，開啟地圖／導航才傳給 Google。附近搜尋結果請先致電確認。
 </template>

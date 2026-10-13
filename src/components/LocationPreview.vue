@@ -3,6 +3,7 @@ import { computed, ref } from 'vue'
 import { ContactLinks, MapEmbed, SourceLink } from '@orangecat/vue-components'
 import mapEmbeds from '../data/map-embeds.json'
 import { directionsFromLocation } from '../services/locationLinks.js'
+import GeolocationPanel from './GeolocationPanel.vue'
 
 // 已有分享嵌入連結的院所沿用免費 iframe；新名冊沒有連結時顯示地址與外開導航。
 const props = defineProps({
@@ -10,8 +11,10 @@ const props = defineProps({
   source: { type: Object, default: null },
   collapsible: { type: Boolean, default: false },
   location: { type: Object, default: null },
+  locating: Boolean,
+  errorCode: { type: String, default: null },
 })
-const emit = defineEmits(['back'])
+const emit = defineEmits(['back', 'locate', 'clear'])
 // 手機資訊卡預設隱藏，有需要才由使用者展開。
 const infoOpen = ref(!props.collapsible)
 const map = new MapEmbed(import.meta.env.VITE_GOOGLE_MAPS_EMBED_KEY)
@@ -34,13 +37,16 @@ section.map-pane(aria-label="院所位置")
       span.map-pin(aria-hidden="true") ⌖
       strong {{ hospital ? hospital.city + '・' + hospital.district : '選擇一間院所' }}
       p {{ hospital ? '點擊下方「在 Google 地圖查看」，核對地址與位置。' : '調整篩選條件，查看院所地址與路線。' }}
-    .map-selection#selected-map-info(v-if="hospital" v-show="!collapsible || infoOpen" aria-live="polite")
-      span.selection-kicker 已選院所
-      strong {{ hospital.name }}
-      span {{ hospital.address }}
-      span(v-if="hospital.nightHours") 夜間急診 {{ hospital.nightHours }}{{ hospital.nightDays ? `・${hospital.nightDays}` : '' }}
-      .selection-actions
-        a(:href="ContactLinks.search(`${hospital.name} ${hospital.address}`)" target="_blank" rel="noopener noreferrer") 在 Google 地圖查看
-        a(:href="directionsFromLocation(hospital.address, location)" target="_blank" rel="noopener noreferrer") {{ location ? '從目前位置導航' : '路線導航' }}
-      SourceLink(v-if="source" :label="source.label" :href="source.url" :checked-at="hospital.checkedAt")
+    //- 定位與院所資訊浮在地圖上；透明區域仍可操作底下的 iframe。
+    .map-controls
+      GeolocationPanel(:location="location" :locating="locating" :error-code="errorCode" @locate="emit('locate')" @clear="emit('clear')")
+      .map-selection#selected-map-info(v-if="hospital" v-show="!collapsible || infoOpen" aria-live="polite")
+        span.selection-kicker 已選院所
+        strong {{ hospital.name }}
+        span {{ hospital.address }}
+        span(v-if="hospital.nightHours") 夜間急診 {{ hospital.nightHours }}{{ hospital.nightDays ? `・${hospital.nightDays}` : '' }}
+        .selection-actions
+          a(:href="ContactLinks.search(`${hospital.name} ${hospital.address}`)" target="_blank" rel="noopener noreferrer") 在 Google 地圖查看
+          a(:href="directionsFromLocation(hospital.address, location)" target="_blank" rel="noopener noreferrer") {{ location ? '從目前位置導航' : '路線導航' }}
+        SourceLink(v-if="source" :label="source.label" :href="source.url" :checked-at="hospital.checkedAt")
 </template>

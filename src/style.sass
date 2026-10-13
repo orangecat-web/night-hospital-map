@@ -152,12 +152,28 @@ button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible
 .search-field
   margin-top: 13px
 
-// GPS 操作獨立於收合搜尋面板，手機與鍵盤使用者都可直接定位。
+// GPS 浮在地圖上方；說明收合，長訊息可捲動，不佔用左側清單。
 .gps-panel
-  flex: 0 0 auto
-  padding: 12px clamp(20px, 3vw, 38px)
-  border-bottom: 1px solid #e0e9e7
+  flex: 0 1 auto
+  min-height: 0
+  max-height: 50%
+  max-width: 340px
+  padding: 12px
+  overflow-y: auto
+  overscroll-behavior: contain
+  border: 1px solid #e0e9e7
+  border-radius: 10px
   background: #fff
+  box-shadow: 0 5px 20px #1c393121
+  pointer-events: auto
+
+.gps-details
+  margin-top: 8px
+
+  summary
+    color: #536b70
+    font-size: .78rem
+    cursor: pointer
 
 .gps-actions, .gps-links
   display: flex
@@ -528,6 +544,17 @@ button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible
   height: 100%
   border: 0
 
+// 上方定位與下方院所卡片各自限高；中央透明區域交由地圖接收拖曳。
+.map-controls
+  position: absolute
+  z-index: 3
+  inset: 17px
+  display: flex
+  flex-direction: column
+  justify-content: space-between
+  gap: 12px
+  pointer-events: none
+
 .map-empty-panel
   position: absolute
   inset: 0 0 150px
@@ -561,11 +588,11 @@ button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible
   font-size: 1.65rem
 
 .map-selection
-  position: absolute
-  z-index: 3
-  right: 17px
-  bottom: 17px
-  left: 17px
+  flex: 0 1 auto
+  min-height: 0
+  max-height: 50%
+  overflow-y: auto
+  overscroll-behavior: contain
   display: grid
   gap: 3px
   max-width: 380px
@@ -573,6 +600,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible
   border-radius: 10px
   background: white
   box-shadow: 0 5px 20px #1c393121
+  pointer-events: auto
 
   strong
     font-size: .88rem

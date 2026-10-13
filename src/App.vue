@@ -5,7 +5,6 @@ import HospitalCard from './components/HospitalCard.vue'
 import LocationPreview from './components/LocationPreview.vue'
 import SiteHeader from './components/SiteHeader.vue'
 import DataStatus from './components/DataStatus.vue'
-import GeolocationPanel from './components/GeolocationPanel.vue'
 import { useGeolocation } from './composables/useGeolocation.js'
 import { useHospitals } from './composables/useHospitals.js'
 import { taiwanCities } from './data/regions.js'
@@ -90,7 +89,7 @@ const selected = computed(() => filtered.value.find((item) => item.id === select
 
 async function viewMap() {
   if (isMobile.value) {
-    if (!selected.value || mapOpen.value) return
+    if (mapOpen.value) return
     returnFocus = document.activeElement
     mapOpen.value = true
     await nextTick()
@@ -195,7 +194,6 @@ onUnmounted(() => {
         .caution(role="note")
           span.caution-icon(aria-hidden="true") i
           span 政府名冊僅提供院所基本資料，夜間急診資訊另行查閱；出發前請先致電。
-      GeolocationPanel(:location="location" :locating="locating" :error-code="errorCode" @locate="locate" @clear="clearLocation")
       //- 預設收合，summary 支援滑鼠、Enter 與空白鍵；查詢值在收合時保留。
       details.search-panel
         summary.search-toggle(aria-controls="hospital-search-controls")
@@ -222,7 +220,7 @@ onUnmounted(() => {
         .results-heading
           h2 搜尋結果
             span.count(aria-live="polite") {{ filtered.length }} 間{{ scope === 'night' ? '已查閱夜間院所' : '名冊院所' }}
-          button.map-jump(v-if="filtered.length" type="button" @click="viewMap") 查看位置
+          button.map-jump(type="button" @click="viewMap") 地圖／定位
         p.registry-help(v-if="scope === 'all'") 此範圍包含夜間服務未確認的獸醫診療機構，不是全台急診名單。
         FilterSummary(:filters="activeFilters" @remove="removeFilter" @clear="clearFilters")
         .share-row
@@ -244,8 +242,8 @@ onUnmounted(() => {
           button(type="button" :disabled="page === pageCount" @click="changePage(page + 1)") 下一頁
         p.data-footnote 夜間資訊最後整理：{{ checkedAt }}。API 擷取不會重設官網查閱日；未逐一電話確認，實際收治請以院所回覆為準。
     div.desktop-map(ref="mapSection")
-      LocationPreview(v-if="!isMobile" :hospital="selected" :source="selected ? sourceById.get(selected.sourceId) : null" :location="location")
+      LocationPreview(v-if="!isMobile" :hospital="selected" :source="selected ? sourceById.get(selected.sourceId) : null" :location="location" :locating="locating" :error-code="errorCode" @locate="locate" @clear="clearLocation")
   //- 手機地圖資訊預設收合，沿用 v1.0 的互動方式。
   dialog.mobile-map-dialog(ref="mapDialog" aria-label="院所地圖" @close="onMapClosed")
-    LocationPreview(v-if="mapOpen" :hospital="selected" :source="selected ? sourceById.get(selected.sourceId) : null" :location="location" :collapsible="true" @back="closeMap")
+    LocationPreview(v-if="mapOpen" :hospital="selected" :source="selected ? sourceById.get(selected.sourceId) : null" :location="location" :locating="locating" :error-code="errorCode" :collapsible="true" @locate="locate" @clear="clearLocation" @back="closeMap")
 </template>
