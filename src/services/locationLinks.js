@@ -1,7 +1,7 @@
 import { ContactLinks } from '../../packages/orange-vue-components/src/core/ContactLinks.js'
 import { isGeoCoordinates } from '../vendor/orangecat-ui/geolocation.js'
 
-// 只有使用者開啟 Google 地圖連結時，才將目前座標提供給該服務。
+// 定位成功後顯示 Google 定位點地圖；外開導航也會使用這組座標。
 export function directionsFromLocation(address, location) {
   const link = ContactLinks.directions(address)
   if (!link || !isGeoCoordinates(location)) return link
@@ -11,6 +11,14 @@ export function directionsFromLocation(address, location) {
 }
 export function currentLocationMap(location) {
   return isGeoCoordinates(location) ? ContactLinks.search(`${location.latitude},${location.longitude}`) : null
+}
+export function currentLocationEmbed(location) {
+  if (!isGeoCoordinates(location)) return null
+  const url = new URL('https://maps.google.com/maps')
+  url.searchParams.set('q', `${location.latitude},${location.longitude}`)
+  url.searchParams.set('z', '15')
+  url.searchParams.set('output', 'embed')
+  return url.href
 }
 export function nearbyEmergencyMap(location) {
   if (!isGeoCoordinates(location)) return null

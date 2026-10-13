@@ -2,7 +2,7 @@
 import { computed, ref } from 'vue'
 import { ContactLinks, MapEmbed, SourceLink } from '@orangecat/vue-components'
 import mapEmbeds from '../data/map-embeds.json'
-import { directionsFromLocation } from '../services/locationLinks.js'
+import { currentLocationEmbed, directionsFromLocation } from '../services/locationLinks.js'
 import GeolocationPanel from './GeolocationPanel.vue'
 
 // 已有分享嵌入連結的院所沿用免費 iframe；新名冊沒有連結時顯示地址與外開導航。
@@ -13,34 +13,38 @@ const props = defineProps({
   location: { type: Object, default: null },
   locating: Boolean,
   errorCode: { type: String, default: null },
+  showCurrentLocation: Boolean,
 })
-const emit = defineEmits(['back', 'locate', 'clear'])
+const emit = defineEmits(['back', 'locate', 'clear', 'show-location'])
 // 手機資訊卡預設隱藏，有需要才由使用者展開。
 const infoOpen = ref(!props.collapsible)
 const map = new MapEmbed(import.meta.env.VITE_GOOGLE_MAPS_EMBED_KEY)
 // 不以未核對的座標或自動猜測地圖取代地址查核。
-const mapUrl = computed(() => props.hospital
+const locationMapUrl = computed(() => props.showCurrentLocation ? currentLocationEmbed(props.location) : null)
+const showingCurrent = computed(() => !!locationMapUrl.value)
+const mapUrl = computed(() => locationMapUrl.value ?? (props.hospital
   ? mapEmbeds[props.hospital.id] ?? map.place(props.hospital.address)
-  : null)
+  : null))
+const mapTitle = computed(() => showingCurrent.value ? '目前定位點的 Google 地圖' : `${props.hospital?.name ?? '院所'} 的 Google 地圖`)
 </script>
 
 <template lang="pug">
-section.map-pane(aria-label="院所位置")
+section.map-pane(:aria-label="showingCurrent ? '目前位置' : '院所位置'")
   .map-heading
-    h2 位置查看
+    h2 {{ showingCurrent ? '目前位置' : '位置查看' }}
     span 點選院所卡片可切換位置資訊
-    button.map-info-toggle(v-if="collapsible && hospital" type="button" :aria-expanded="infoOpen" aria-controls="selected-map-info" @click="infoOpen = !infoOpen") {{ infoOpen ? '隱藏資訊' : '顯示資訊' }}
+    button.map-info-toggle(v-if="collapsible && hospital && !showingCurrent" type="button" :aria-expanded="infoOpen" aria-controls="selected-map-info" @click="infoOpen = !infoOpen") {{ infoOpen ? '隱藏資訊' : '顯示資訊' }}
     button.map-back(type="button" @click="emit('back')") 關閉地圖
   .map-stage
-    iframe.map-iframe(v-if="mapUrl" :key="hospital.id" :src="mapUrl" :title="`${hospital.name} 的 Google 地圖`" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen)
+    iframe.map-iframe(v-if="mapUrl" :key="mapUrl" :src="mapUrl" :title="mapTitle" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen)
     .map-empty-panel(v-else)
       span.map-pin(aria-hidden="true") ⌖
       strong {{ hospital ? hospital.city + '・' + hospital.district : '選擇一間院所' }}
       p {{ hospital ? '點擊下方「在 Google 地圖查看」，核對地址與位置。' : '調整篩選條件，查看院所地址與路線。' }}
     //- 定位與院所資訊浮在地圖上；透明區域仍可操作底下的 iframe。
     .map-controls
-      GeolocationPanel(:location="location" :locating="locating" :error-code="errorCode" @locate="emit('locate')" @clear="emit('clear')")
-      .map-selection#selected-map-info(v-if="hospital" v-show="!collapsible || infoOpen" aria-live="polite")
+      GeolocationPanel(:location="location" :locating="locating" :error-code="errorCode" :show-current-location="showingCurrent" @locate="emit('locate')" @clear="emit('clear')" @show-location="emit('show-location')")
+      .map-selection#selected-map-info(v-if="hospital && !showingCurrent" v-show="!collapsible || infoOpen" aria-live="polite")
         span.selection-kicker 已選院所
         strong {{ hospital.name }}
         span {{ hospital.address }}

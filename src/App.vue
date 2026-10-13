@@ -14,6 +14,9 @@ import { HospitalDirectory } from './domain/HospitalDirectory.js'
 // 非同步資料有變動時重建查詢物件；computed 讓卡片數量、地區選單與地圖一起更新。
 const { state, loading, statusLabel, load } = useHospitals()
 const { location, locating, errorCode, locate, clear: clearLocation } = useGeolocation()
+// 地圖焦點獨立於院所選取；新定位切到座標，點院所則回到院所嵌圖。
+const showCurrentLocation = ref(false)
+watch(location, (position) => { showCurrentLocation.value = !!position })
 const directory = computed(() => new HospitalDirectory(state.value.records))
 const sourceById = new Map(sources.map((source) => [source.id, source]))
 const cities = taiwanCities
@@ -101,8 +104,12 @@ async function viewMap() {
   mapSection.value?.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'start' })
 }
 function selectHospital(id) {
+  showCurrentLocation.value = false
   selectedId.value = id
   if (isMobile.value) viewMap()
+}
+function returnToLocation() {
+  if (location.value) showCurrentLocation.value = true
 }
 function closeMap() { mapDialog.value?.close() }
 function onMapClosed() {
@@ -243,8 +250,8 @@ onUnmounted(() => {
           button(type="button" :disabled="page === pageCount" @click="changePage(page + 1)") 下一頁
         p.data-footnote 夜間資訊最後整理：{{ checkedAt }}。API 擷取不會重設官網查閱日；未逐一電話確認，實際收治請以院所回覆為準。
     div.desktop-map(ref="mapSection")
-      LocationPreview(v-if="!isMobile" :hospital="selected" :source="selected ? sourceById.get(selected.sourceId) : null" :location="location" :locating="locating" :error-code="errorCode" @locate="locate" @clear="clearLocation")
+      LocationPreview(v-if="!isMobile" :hospital="selected" :source="selected ? sourceById.get(selected.sourceId) : null" :location="location" :locating="locating" :error-code="errorCode" :show-current-location="showCurrentLocation" @locate="locate" @clear="clearLocation" @show-location="returnToLocation")
   //- 手機地圖資訊預設收合，沿用 v1.0 的互動方式。
   dialog.mobile-map-dialog(ref="mapDialog" aria-label="院所地圖" @close="onMapClosed")
-    LocationPreview(v-if="mapOpen" :hospital="selected" :source="selected ? sourceById.get(selected.sourceId) : null" :location="location" :locating="locating" :error-code="errorCode" :collapsible="true" @locate="locate" @clear="clearLocation" @back="closeMap")
+    LocationPreview(v-if="mapOpen" :hospital="selected" :source="selected ? sourceById.get(selected.sourceId) : null" :location="location" :locating="locating" :error-code="errorCode" :show-current-location="showCurrentLocation" :collapsible="true" @locate="locate" @clear="clearLocation" @show-location="returnToLocation" @back="closeMap")
 </template>
