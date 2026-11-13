@@ -2,5 +2,6 @@
 import { createApp } from 'vue'
 import SourcesApp from './SourcesApp.vue'
 import './style.sass'
+import './clay.sass'
 
 createApp(SourcesApp).mount('#app')

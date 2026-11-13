@@ -5,6 +5,8 @@ import HospitalCard from './components/HospitalCard.vue'
 import LocationPreview from './components/LocationPreview.vue'
 import SiteHeader from './components/SiteHeader.vue'
 import DataStatus from './components/DataStatus.vue'
+import UiIcon from './components/UiIcon.vue'
+import petCompanions from './assets/clay-companions.webp'
 import { useGeolocation } from './composables/useGeolocation.js'
 import { useHospitals } from './composables/useHospitals.js'
 import { taiwanCities } from './data/regions.js'
@@ -41,9 +43,15 @@ const selectedId = ref(state.value.records[0]?.id ?? null)
 const page = ref(1)
 const pageSize = 20
 
-// 桌機維持固定右側地圖；手機用原生 dialog，關閉後把焦點還給原按鈕。
-const mobileMedia = window.matchMedia('(max-width: 850px)')
+// 桌機左右並排、平板單欄切換、手機使用 dialog；不卸載清單以保留展開狀態。
+const mobileMedia = window.matchMedia('(max-width: 600px)')
+const tabletMedia = window.matchMedia('(min-width: 601px) and (max-width: 1100px)')
 const isMobile = ref(mobileMedia.matches)
+const isTablet = ref(tabletMedia.matches)
+const tabletView = ref('list')
+const finderTitle = ref(null)
+let listScroll = 0
+let selectedTrigger
 const mapOpen = ref(false)
 const mapDialog = ref(null)
 const mapSection = ref(null)
@@ -99,14 +107,33 @@ async function viewMap() {
     mapDialog.value?.showModal()
     return
   }
+  if (isTablet.value) {
+    if (tabletView.value === 'list') listScroll = window.scrollY
+    tabletView.value = 'map'
+    await nextTick()
+    window.scrollTo({ top: 0, behavior: 'instant' })
+    return
+  }
   await nextTick()
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
   mapSection.value?.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'start' })
 }
 function selectHospital(id) {
+  selectedTrigger = document.activeElement
   showCurrentLocation.value = false
   selectedId.value = id
-  if (isMobile.value) viewMap()
+  if (isMobile.value || isTablet.value) viewMap()
+}
+async function showList({ focusSelection = false } = {}) {
+  if (mapOpen.value) closeMap()
+  tabletView.value = 'list'
+  await nextTick()
+  if (isTablet.value) window.scrollTo({ top: listScroll, behavior: 'instant' })
+  if (focusSelection && selectedTrigger?.isConnected) selectedTrigger.focus({ preventScroll: true })
+}
+async function findHospitals() {
+  await showList()
+  finderTitle.value?.focus({ preventScroll: true })
 }
 function returnToLocation() {
   if (location.value) showCurrentLocation.value = true
@@ -116,9 +143,10 @@ function onMapClosed() {
   mapOpen.value = false
   nextTick(() => returnFocus?.isConnected && returnFocus.focus())
 }
-function syncViewport(event) {
-  isMobile.value = event.matches
-  if (!event.matches && mapOpen.value) closeMap()
+function syncViewport() {
+  isMobile.value = mobileMedia.matches
+  isTablet.value = tabletMedia.matches
+  if (!isMobile.value && mapOpen.value) closeMap()
 }
 
 // 分頁只改清單，不向 API 重複抓資料，也不取消使用者選好的縣市與服務条件。
@@ -146,6 +174,7 @@ function restoreFromUrl() {
 
 onMounted(async () => {
   mobileMedia.addEventListener('change', syncViewport)
+  tabletMedia.addEventListener('change', syncViewport)
   window.addEventListener('popstate', restoreFromUrl)
   await load({ initial: true })
   if (unmounted) return
@@ -184,6 +213,7 @@ onMounted(async () => {
 onUnmounted(() => {
   unmounted = true
   mobileMedia.removeEventListener('change', syncViewport)
+  tabletMedia.removeEventListener('change', syncViewport)
   window.removeEventListener('popstate', restoreFromUrl)
   toolLifecycle?.abort()
 })
@@ -191,21 +221,33 @@ onUnmounted(() => {
 
 <template lang="pug">
 .site-shell
-  SiteHeader(current="directory")
+  SiteHeader(current="directory" @find="findHospitals")
   main.main-layout
-    .list-pane
-      //- 清單上方只保留標題，地區說明與出發提醒放入展開的搜尋面板。
-      .intro
-        h1 尋找動物急診
+    .finder-intro
+      div
+        span.eyebrow 夜間毛孩就醫
+        h1(ref="finderTitle" tabindex="-1")
+          span 陪毛孩，
+          span 找到今晚的照顧
+      img.pet-companions(:src="petCompanions" alt="" width="160" height="90")
+    //- 平板以原生按鈕切換，使用 v-show 保留查詢、卡片詳情及列表閱讀位置。
+    .view-switch(v-if="isTablet" role="group" aria-label="閱讀模式")
+      button(type="button" :aria-pressed="tabletView === 'list'" @click="showList()")
+        UiIcon(name="list")
+        span 院所列表
+      button(type="button" :aria-pressed="tabletView === 'map'" @click="viewMap")
+        UiIcon(name="map")
+        span 地圖
+    .list-pane(v-show="!isTablet || tabletView === 'list'")
       //- 預設收合，summary 支援滑鼠、Enter 與空白鍵；查詢值在收合時保留。
       details.search-panel
         summary.search-toggle(aria-controls="hospital-search-controls")
+          UiIcon(name="filter")
           .search-toggle-copy
             strong 搜尋與篩選
             span(:title="searchSummary") {{ searchSummary }}
           span.search-toggle-state(aria-hidden="true")
-            span.when-closed 展開 ＋
-            span.when-open 收起 −
+            UiIcon(name="chevron")
         #hospital-search-controls.search-controls
           .search-intro
             p 可選全台 22 縣市，目前 {{ reviewedCities.size }} 縣市有已查閱夜間院所；先看資訊，再致電確認是否接診。
@@ -222,17 +264,22 @@ onUnmounted(() => {
             FilterChip(:pressed="onlyEmergency" label="提供急診" @update:pressed="onlyEmergency = $event")
             FilterChip(:pressed="false" label="目前營業中" :disabled="true")
           p.filter-help 沒有即時接診資料；名冊開業狀態與 24 小時公告都不代表此刻可收治。
+          details.data-disclosure
+            summary 資料與更新資訊
+            DataStatus(:state="state" :loading="loading" :label="statusLabel" @refresh="load()")
       //- 可捲動結果區含狀態、分頁與卡片，避免名冊增加後擠壓桌機地圖。
       .results
-        DataStatus(:state="state" :loading="loading" :label="statusLabel" @refresh="load()")
         .results-heading
-          h2 搜尋結果
+          h2 {{ scope === 'night' ? '夜間院所' : '院所名冊' }}
             span.count(aria-live="polite") {{ filtered.length }} 間{{ scope === 'night' ? '已查閱夜間院所' : '名冊院所' }}
-          button.map-jump(type="button" @click="viewMap") 地圖／定位
+          .results-tools
+            ShareLinkButton(:url="shareUrl" label="分享查詢")
+            button.map-jump(type="button" :aria-label="isMobile ? '打開地圖' : '查看地圖'" @click="viewMap")
+              UiIcon(name="map")
+              span 地圖
+        p.results-status(v-if="loading || state.errors.length" role="status") {{ loading ? '正在整理院所資訊…' : '暫用現有資料，更新詳情見搜尋面板。' }}
         p.registry-help(v-if="scope === 'all'") 此範圍包含夜間服務未確認的獸醫診療機構，不是全台急診名單。
         FilterSummary(:filters="activeFilters" @remove="removeFilter" @clear="clearFilters")
-        .share-row
-          ShareLinkButton(:url="shareUrl")
         .empty-state(v-if="filtered.length === 0" role="status")
           h3(v-if="cityWithoutSamples") {{ city }}目前尚未收錄已查閱夜間院所
           h3(v-else) 目前沒有符合條件的院所
@@ -249,9 +296,9 @@ onUnmounted(() => {
           span 第 {{ page }} / {{ pageCount }} 頁
           button(type="button" :disabled="page === pageCount" @click="changePage(page + 1)") 下一頁
         p.data-footnote 夜間資訊最後整理：{{ checkedAt }}。API 擷取不會重設官網查閱日；未逐一電話確認，實際收治請以院所回覆為準。
-    div.desktop-map(ref="mapSection")
-      LocationPreview(v-if="!isMobile" :hospital="selected" :source="selected ? sourceById.get(selected.sourceId) : null" :location="location" :locating="locating" :error-code="errorCode" :show-current-location="showCurrentLocation" @locate="locate" @clear="clearLocation" @show-location="returnToLocation")
+    div.desktop-map(ref="mapSection" v-show="!isMobile && (!isTablet || tabletView === 'map')")
+      LocationPreview(v-if="!isMobile" :hospital="selected" :source="selected ? sourceById.get(selected.sourceId) : null" :location="location" :locating="locating" :error-code="errorCode" :show-current-location="showCurrentLocation" :show-back="isTablet" back-label="返回院所列表" @back="showList({ focusSelection: true })" @locate="locate" @clear="clearLocation" @show-location="returnToLocation")
   //- 手機地圖資訊預設收合，沿用 v1.0 的互動方式。
   dialog.mobile-map-dialog(ref="mapDialog" aria-label="院所地圖" @close="onMapClosed")
-    LocationPreview(v-if="mapOpen" :hospital="selected" :source="selected ? sourceById.get(selected.sourceId) : null" :location="location" :locating="locating" :error-code="errorCode" :show-current-location="showCurrentLocation" :collapsible="true" @locate="locate" @clear="clearLocation" @show-location="returnToLocation" @back="closeMap")
+    LocationPreview(v-if="mapOpen" :hospital="selected" :source="selected ? sourceById.get(selected.sourceId) : null" :location="location" :locating="locating" :error-code="errorCode" :show-current-location="showCurrentLocation" :collapsible="true" :show-back="true" @locate="locate" @clear="clearLocation" @show-location="returnToLocation" @back="closeMap")
 </template>

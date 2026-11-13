@@ -1,0 +1,420 @@
+// 奶油黏土風：用 CSS 浮雕與陰影呈現觸感，文字保留對比，圖片維持獨立可替換。
+:root
+  color: #4f3423
+  background: #f9e6cf
+  --ink: #4f3423
+  --muted: #7c654f
+  --paper: #fff0dc
+  --line: #e6cbb0
+  --clay: #b45132
+  --clay-dark: #873a24
+  --soft: #f6dfc5
+  --sage: #e4e9d5
+  --oc-accent: #b45132
+  --oc-accent-text: #873a24
+  --oc-accent-soft: #f7dfca
+  --oc-control-bg: #fff4e6
+  --oc-control-text: #4f3423
+  --oc-control-border: #d7b897
+  --oc-control-label: #7c654f
+
+body
+  background: radial-gradient(ellipse at top left, #fff1df, #f6dfc4 80%)
+
+.site-shell
+  background: linear-gradient(125deg, #fff0dc, #fff2e2 55%, #f9e6cf)
+
+.site-header
+  border-color: #ead2b6
+  background: linear-gradient(#fff4e6, #fbe7cd)
+  box-shadow: 0 4px 9px #86542e13, inset 0 2px 0 #fffaf2
+
+.brand .brand-mark
+  width: 43px
+  height: 43px
+  padding: 9px
+  color: #fff5e5
+  background: linear-gradient(145deg, #e59165, #b95b3b)
+  border: 1px solid #d78d60
+  border-radius: 16px
+  box-shadow: inset 2px 2px 3px #ffcd9c, inset -2px -3px 3px #9d472a80, 2px 4px 6px #98633d36
+
+.brand
+  font-size: 1.25rem
+  letter-spacing: -.035em
+
+.site-nav
+  gap: 12px
+
+  a, button
+    padding: 10px 20px
+    border: 1px solid #f6dfc0
+    background: linear-gradient(#fff5e6, #f7dfbe)
+    box-shadow: inset 2px 2px 2px #fffdf5, inset -1px -2px 3px #ca9c6355, 2px 4px 6px #9d704539
+    border-radius: 28px
+    font-weight: 650
+
+    &:hover
+      background: linear-gradient(#fff8ee, #f7e2c8)
+      transform: translateY(-1px)
+
+  a[aria-current='page']
+    background: linear-gradient(#fac1a0, #e89570)
+    border-color: #efb187
+    color: #5c301e
+    box-shadow: inset 1px 2px 3px #ffe5ca, inset -1px -2px 3px #b9653b55, 2px 4px 6px #9d704539
+
+.finder-intro
+  padding-bottom: 22px
+
+  h1
+    color: #4e2f1a
+    letter-spacing: -.045em
+    text-shadow: 0 1px 0 #fff9ef
+
+.pet-companions
+  width: clamp(145px, 14vw, 205px)
+  filter: drop-shadow(0 3px 2px #85552c16)
+
+.search-panel
+  border: 1px solid #c6cbb2
+  background: linear-gradient(120deg, #e2e8d1, #f4f1dc)
+  border-radius: 22px
+  box-shadow: inset 2px 2px 3px #fff9ea, inset -1px -3px 3px #aeb9954a, 2px 4px 6px #97724927
+
+.search-toggle > .ui-icon
+  width: 23px
+  height: 23px
+  color: #426c57
+  filter: drop-shadow(1px 2px 1px #435b3b35)
+
+.search-toggle-copy strong
+  font-weight: 700
+
+.search-controls
+  background: #fff1df
+  border-top: 1px solid #d4c6ac
+
+.results-heading h2
+  color: #56351f
+
+.hospital-card
+  border: 1px solid #f6ddbb
+  border-radius: 24px
+  background: linear-gradient(125deg, #fff5e7, #fff0db 65%, #fce9cf)
+  box-shadow: inset 2px 2px 3px #fffdf6, inset -1px -3px 4px #d9b18442, 2px 5px 7px #9e714627
+
+  &.selected
+    border-color: #d79e77
+    box-shadow: inset 2px 2px 3px #fffdf6, inset -1px -3px 4px #d9b18442, 0 0 0 1px #d79e7738, 2px 5px 7px #9e714627
+
+.card-symbol
+  flex-basis: 55px
+  width: 55px
+  height: 60px
+  background: transparent
+  border-radius: 0
+
+  img
+    display: block
+    width: 58px
+    height: 58px
+    object-fit: contain
+    filter: drop-shadow(0 2px 1px #96784d22)
+
+.card-heading strong
+  color: #513019
+  font-weight: 750
+
+.service-tag
+  background: linear-gradient(#ffe0c5, #efbfa0)
+  border: 1px solid #f5d2b4
+  color: #734426
+  border-radius: 14px
+  box-shadow: inset 1px 1px 1px #fff4df, 1px 2px 3px #9b684a18
+
+  &.registry-tag
+    background: #eee5d6
+    border-color: #ded0bd
+    color: #71604a
+
+.hospital-card:nth-child(even) .service-tag:not(.registry-tag)
+  background: linear-gradient(#e1e8d2, #c7d2b8)
+  border-color: #cdd8bd
+  color: #4d6347
+
+.call-button, .route-button, .clear-button
+  border-radius: 24px
+  border: 1px solid #edccaa
+  background: linear-gradient(#fff7e9, #f7dfbf)
+  box-shadow: inset 2px 2px 2px #fffdf5, inset -1px -2px 3px #caa26f55, 2px 4px 5px #9d70452c
+  color: #644229
+  font-weight: 700
+
+  &:hover
+    background: linear-gradient(#fffaf1, #f7e4c9)
+    transform: translateY(-1px)
+
+  &:active
+    transform: translateY(1px)
+    box-shadow: inset 1px 2px 4px #9d704535
+
+.route-button .ui-icon
+  color: #4f7968
+  filter: drop-shadow(1px 1px 1px #3a63502b)
+
+.call-button, .map-route
+  color: #fff8ef
+  border-color: #ac4b2c
+  background: linear-gradient(#b45132, #a14529)
+  box-shadow: inset 1px 2px 2px #e6a17680, inset -1px -2px 2px #87361d77, 2px 4px 6px #9d56394a
+
+  &:hover
+    background: linear-gradient(#a64a2e, #963b23)
+
+  .ui-icon
+    color: #fff6e7
+    filter: drop-shadow(1px 1px 1px #71381d55)
+
+.map-pane
+  border: 2px solid #fff4e2
+  border-radius: 28px
+  background: linear-gradient(#fff2de, #fbe6ca)
+  box-shadow: inset -2px -3px 4px #d3ab7d66, 3px 5px 9px #97643e2b
+
+.map-heading
+  background: linear-gradient(#fff5e5, #fae7cc)
+
+.map-stage
+  margin: 0 12px
+  border: 1px solid #c5c8a8
+  border-radius: 18px
+  overflow: hidden
+  box-shadow: inset 2px 3px 7px #62704c38
+
+.map-controls
+  // iframe 內部依 Google 的實際圖面顯示，浮雕只用於自家控制項。
+  z-index: 2
+
+.gps-actions
+  border: 1px solid #e5c9a5
+  background: linear-gradient(#fff8ed, #f4dfbf)
+  box-shadow: inset 1px 2px 2px #fffef5, inset -1px -2px 3px #ba996256, 2px 4px 5px #6d714c36
+
+.gps-button .ui-icon
+  color: #4d7b66
+
+.gps-popover
+  background: #fff4e4
+  border-radius: 18px
+  border-color: #e5c9a5
+
+.map-selection
+  border: 1px solid #f0d4b0
+  border-radius: 22px
+  margin: 12px
+  padding: 16px
+  background: linear-gradient(115deg, #fff5e5, #fbe6c9)
+  box-shadow: inset 1px 2px 3px #fffdf4, inset -1px -2px 3px #cfab7b55, 1px 3px 5px #a9774224
+
+.selection-kicker
+  display: inline-block
+  color: #45644d
+  background: #dce5cb
+  padding: 3px 8px
+  border-radius: 9px
+  font-weight: 600
+
+.map-destination h3
+  color: #50301b
+
+.map-extra
+  border-top: 1px solid #e5cfb4
+  padding-top: 9px
+
+.view-switch
+  border-radius: 22px
+  border-color: #d8c5a4
+  background: linear-gradient(#f3dfc4, #fff0d8)
+  box-shadow: inset 2px 3px 5px #bb956d44
+
+  button[aria-pressed='true']
+    border-radius: 18px
+    color: #fff8ef
+    background: linear-gradient(#b45132, #9f4228)
+    box-shadow: inset 1px 2px 2px #edb18877, 1px 3px 4px #935b3933
+
+.help-dialog, .mobile-map-dialog
+  border: 2px solid #fff6e8
+  background: linear-gradient(135deg, #fff4e5, #fae5cb)
+  box-shadow: inset -2px -3px 4px #d2ae7b66, 0 24px 80px #65402f40
+
+.help-step-icon
+  background: linear-gradient(#e8edd9, #cad6b9)
+  color: #4c6954
+  box-shadow: inset 1px 2px 2px #faffed, 1px 3px 4px #9d97613b
+
+.help-data-note, .caution
+  background: #f3e2cd
+
+.oc-filter-summary
+  .oc-filter-caption, .oc-filter-clear
+    color: var(--muted)
+
+  .oc-filter-token
+    background: #f6e6d0
+    border-color: #d7b897
+    color: #75472b
+
+.oc-share-message
+  color: var(--muted)
+
+.sources-hero, .method-list li, .source-group
+  background: linear-gradient(125deg, #fff6e8, #fbe9d1)
+  border-color: #f4dab7
+  box-shadow: inset 2px 2px 3px #fffdf5, inset -1px -2px 3px #d5b08244, 2px 4px 7px #9d70451a
+
+@media (min-width: 1101px)
+  .site-shell
+    margin: 18px auto
+    max-width: 1640px
+    border: 2px solid #fff4e3
+    border-radius: 32px
+    box-shadow: inset 1px 1px 3px #fffaf2, 4px 8px 22px #9c70482b
+    overflow: clip
+
+  .site-header
+    border-radius: 30px 30px 0 0
+
+  .main-layout
+    height: calc(100dvh - 118px)
+    padding-top: 20px
+    padding-bottom: 22px
+    column-gap: 24px
+
+@media (min-width: 601px) and (max-width: 1100px)
+  .pet-companions
+    width: 220px
+
+  .main-layout
+    max-width: 900px
+
+@media (max-width: 600px)
+  .brand
+    font-size: .94rem
+    letter-spacing: -.04em
+
+    .brand-mark
+      width: 30px
+      height: 30px
+      padding: 5px
+      border-radius: 11px
+
+  .site-nav
+    gap: 7px
+
+    a, button
+      font-size: .8rem
+      padding: 7px 9px
+      min-height: 40px
+
+  .pet-companions
+    width: 122px
+
+  .finder-intro h1
+    font-size: 1.35rem
+
+  .card-symbol
+    flex-basis: 42px
+    width: 42px
+    height: 48px
+
+    img
+      width: 45px
+      height: 45px
+
+  .card-select
+    gap: 9px
+
+  .map-stage
+    margin: 0 8px
+
+  .map-selection
+    margin: 9px
+    padding: 13px
+
+  .mobile-map-dialog .map-pane
+    background: transparent
+    box-shadow: none
+
+@media (prefers-reduced-motion: reduce)
+  .site-nav a, .site-nav button, .call-button, .route-button
+    transform: none !important
+
+// 窄版保留兩行標題；定位選單在短地圖內可捲動，不被裁切。
+.gps-popover
+  max-height: 210px
+
+@media (max-width: 360px)
+  .pet-companions
+    width: 100px
+
+  .finder-intro h1
+    font-size: 1.25rem
+
+@media (pointer: coarse)
+  .copy-phone, .map-info-toggle, .oc-share-button, .oc-filter-token, .oc-filter-clear
+    min-height: 44px
+
+  .site-nav a, .site-nav button
+    min-height: 44px
+
+  .gps-popover-heading .icon-button
+    width: 44px
+    height: 44px
+
+// 分享收進結果列，讓長名院所與實際服務時段保有閱讀空間。
+.results-tools
+  display: flex
+  flex-wrap: wrap
+  align-items: center
+  justify-content: flex-end
+  gap: 4px 10px
+  max-width: 45%
+
+  .oc-share-button
+    min-height: 40px
+    padding: 4px 0
+    border: 0
+    background: transparent
+    color: var(--muted)
+    font-size: .78rem
+    text-decoration: underline
+
+  .oc-share-message
+    font-size: .75rem
+
+@media (pointer: coarse)
+  .results-tools .oc-share-button
+    min-height: 44px
+
+// 編譯後共用元件有 scoped 樣式，增加作用範圍明確覆蓋工具列外觀。
+.site-shell .results-tools .oc-share-button
+  min-height: 40px
+  padding: 4px 0
+  border: 0
+  border-radius: 0
+  background: transparent
+  color: var(--muted)
+  font-size: .78rem
+  text-decoration: underline
+
+@media (max-width: 600px)
+  .site-shell .map-jump
+    display: inline-flex
+    min-height: 44px
+    padding: 4px 0
+
+@media (pointer: coarse)
+  .site-shell .results-tools .oc-share-button
+    min-height: 44px

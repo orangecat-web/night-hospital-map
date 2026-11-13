@@ -1,10 +1,25 @@
-// 全站樣式：Vue 元件使用 Pug，這裡維持縮排式 Sass；API 新介面放在檔案尾端。
+// 溫柔陪伴版：奶油白、陶土橘與可可文字；維持對比與實際操作的清楚度。
 :root
-  font-family: -apple-system, BlinkMacSystemFont, 'Noto Sans TC', 'Microsoft JhengHei', system-ui, sans-serif
-  color: #183036
-  background: #f6f8f8
+  font-family: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', system-ui, sans-serif
+  color: #49372e
+  background: #fcf8f2
   font-synthesis: none
   text-rendering: optimizeLegibility
+  --ink: #49372e
+  --muted: #79685b
+  --paper: #fffcf7
+  --line: #e7d9cb
+  --clay: #ac5639
+  --clay-dark: #88402b
+  --soft: #f6e9dc
+  --sage: #edf0e4
+  --oc-accent: #ac5639
+  --oc-accent-text: #88402b
+  --oc-accent-soft: #f6e9dc
+  --oc-control-bg: #fffcf7
+  --oc-control-text: #49372e
+  --oc-control-border: #ddcdbc
+  --oc-control-label: #79685b
 
 *
   box-sizing: border-box
@@ -16,227 +31,255 @@ body
   margin: 0
   min-width: 320px
 
-button, input, select
+button, input, select, textarea
   font: inherit
+
+button, a, summary
+  -webkit-tap-highlight-color: transparent
 
 button
   cursor: pointer
 
-button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible
-  outline: 3px solid #78c7be
-  outline-offset: 2px
+button, input, select
+  &:focus-visible
+    outline: 3px solid #b35d40
+    outline-offset: 3px
+
+a:focus-visible, summary:focus-visible, [tabindex='-1']:focus-visible
+  outline: 3px solid #b35d40
+  outline-offset: 3px
+
+a
+  color: var(--clay-dark)
+  text-underline-offset: 4px
+
+button:disabled
+  cursor: not-allowed
+
+.ui-icon
+  width: 21px
+  height: 21px
+  flex: 0 0 auto
+  vertical-align: middle
 
 .site-shell
-  min-height: 100vh
+  min-height: 100dvh
 
-// 共用頂部導覽，首頁與來源頁使用相同結構。
+.eyebrow
+  display: block
+  color: var(--muted)
+  font-size: .75rem
+  font-weight: 600
+  letter-spacing: .12em
+
 .site-header
-  min-height: 68px
-  padding: 0 clamp(20px, 3vw, 42px)
+  min-height: 78px
   display: flex
   align-items: center
   justify-content: space-between
   gap: 16px
-  background: #fff
-  border-bottom: 1px solid #e3ebea
+  max-width: 1600px
+  padding: 15px clamp(20px, 3vw, 42px)
+  margin: auto
+  border-bottom: 1px solid var(--line)
 
 .brand
-  display: flex
+  display: inline-flex
   align-items: center
   gap: 10px
-  font-size: 1.05rem
-  font-weight: 800
-  letter-spacing: .02em
-  color: inherit
+  color: var(--ink)
   text-decoration: none
+  font-size: 1.15rem
+  font-weight: 750
+  letter-spacing: .02em
+  white-space: nowrap
+
+.brand .brand-mark
+  width: 31px
+  height: 31px
+  color: var(--clay)
 
 .site-nav
   display: flex
   align-items: center
-  gap: 4px
+  gap: 6px
 
-  a
-    padding: 9px 13px
-    border-radius: 8px
-    color: #536b70
-    font-size: .88rem
-    font-weight: 700
+  a, button
+    display: inline-flex
+    align-items: center
+    min-height: 44px
+    padding: 9px 14px
+    border: 0
+    border-radius: 24px
+    background: transparent
+    color: var(--ink)
+    font-size: .94rem
     text-decoration: none
     white-space: nowrap
 
-    &:hover
-      background: #f2f7f6
+    &:hover, &[aria-expanded='true']
+      background: var(--soft)
 
-    &[aria-current="page"]
-      background: #e8f5f2
-      color: #096d65
+  a[aria-current='page']
+    color: var(--clay-dark)
 
-.brand-mark
-  border-radius: 9px
-
-.demo-badge
-  padding: 6px 10px
-  border-radius: 6px
-  background: #e8f5f2
-  color: #096d65
-  font-size: .76rem
-  font-weight: 750
-  white-space: nowrap
-
-// 桌機左右欄：左邊篩選與獨立捲動清單，右邊地圖。
+// 桌機左側閱讀，右側地圖；標題與搜尋不會跟隨院所清單捲走。
 .main-layout
   max-width: 1600px
+  height: calc(100dvh - 78px)
+  min-height: 550px
   margin: auto
-  height: calc(100dvh - 68px)
+  padding: 24px clamp(20px, 3vw, 42px) 28px
   display: grid
-  grid-template-columns: minmax(390px, 43%) minmax(0, 1fr)
-  align-items: stretch
+  grid-template-columns: minmax(360px, .95fr) minmax(0, 1.25fr)
+  grid-template-rows: auto minmax(0, 1fr)
+  column-gap: 28px
+
+.finder-intro
+  grid-column: 1
+  display: flex
+  align-items: center
+  justify-content: space-between
+  gap: 6px
+  padding: 4px 0 21px
+  min-width: 0
+
+  h1
+    margin: 7px 0 0
+    font-size: clamp(1.35rem, 1.9vw, 1.8rem)
+    line-height: 1.5
+    font-weight: 750
+    letter-spacing: -.03em
+
+    span
+      display: block
+
+.pet-companions
+  width: clamp(118px, 12vw, 170px)
+  height: auto
+  flex: 0 0 auto
+  object-fit: contain
+
+.view-switch
+  display: none
 
 .list-pane
+  grid-column: 1
   display: flex
   flex-direction: column
   min-width: 0
   min-height: 0
-  background: #f8faf9
-  border-right: 1px solid #e0e9e7
 
-// 查詢說明與出發前確認提醒。
-.intro
-  padding: 28px clamp(20px, 3vw, 38px) 16px
-  background: #fff
+.search-panel
+  flex: 0 0 auto
+  margin-bottom: 15px
+  border: 1px solid #d8c4b1
+  border-radius: 14px
+  background: var(--paper)
+  overflow: clip
 
-  h1
-    margin: 0 0 8px
-    font-size: clamp(1.45rem, 2.2vw, 1.85rem)
-    line-height: 1.3
-    letter-spacing: -.035em
+.search-toggle
+  display: flex
+  align-items: center
+  gap: 12px
+  padding: 13px 16px
+  list-style: none
+  cursor: pointer
+
+  &::-webkit-details-marker
+    display: none
+
+  > .ui-icon
+    color: var(--clay-dark)
+
+.search-toggle-copy
+  min-width: 0
+  flex: 1
+
+  strong, span
+    display: block
+
+  strong
+    font-size: .98rem
+    font-weight: 650
+
+  span
+    margin-top: 3px
+    font-size: .75rem
+    color: var(--muted)
+    text-overflow: ellipsis
+    white-space: nowrap
+    overflow: hidden
+
+.search-toggle-state
+  transition: transform .2s
+  color: var(--muted)
+
+.search-panel[open] .search-toggle-state
+  transform: rotate(180deg)
+
+.search-controls
+  max-height: min(42dvh, 430px)
+  overflow: auto
+  overscroll-behavior: contain
+  padding: 4px 16px 18px
+
+.search-intro
+  margin-bottom: 18px
 
   p
     margin: 0
-    color: #5b7075
-    font-size: .9rem
-    line-height: 1.6
+    color: var(--muted)
+    font-size: .86rem
+    line-height: 1.7
 
 .caution
   display: flex
-  gap: 10px
   align-items: flex-start
-  margin-top: 18px
-  padding: 11px 13px
-  border-radius: 9px
-  background: #eaf6f3
-  color: #0a6a62
-  font-size: .84rem
-  font-weight: 650
-  line-height: 1.55
+  gap: 10px
+  padding: 12px
+  margin-top: 12px
+  border-radius: 10px
+  background: var(--soft)
+  color: #765039
+  font-size: .82rem
+  line-height: 1.7
 
 .caution-icon
+  flex: 0 0 18px
+  font-family: Georgia, serif
+  border: 1px solid currentColor
+  border-radius: 50%
   width: 18px
   height: 18px
-  flex: 0 0 18px
-  display: grid
-  place-items: center
-  margin-top: 1px
-  border: 1.5px solid currentColor
-  border-radius: 50%
-  font-family: Georgia, serif
-  font-size: .73rem
-  font-weight: bold
+  text-align: center
+  line-height: 17px
 
-// 地區、關鍵字與服務篩選區。
-.search-panel
-  flex: 0 0 auto
-  border-bottom: 1px solid #e0e9e7
-  background: #fff
+.scope-switch
+  display: flex
+  gap: 4px
+  padding: 4px
+  margin-bottom: 15px
+  background: var(--soft)
+  border-radius: 11px
+
+  button
+    flex: 1
+    min-height: 43px
+    padding: 9px 6px
+    border: 0
+    border-radius: 8px
+    background: transparent
+    color: var(--muted)
+    font-size: .8rem
+
+    &[aria-pressed='true']
+      color: var(--clay-dark)
+      background: var(--paper)
+      box-shadow: 0 1px 3px #49372e12
 
 .search-field
-  margin-top: 13px
-
-// 地區覆蓋說明及出發提醒隨搜尋面板展開；保留原有文字樣式。
-.search-intro
-  margin-bottom: 16px
-
-  p
-    margin: 0
-    color: #5b7075
-    font-size: .9rem
-    line-height: 1.6
-
-  .caution
-    margin-top: 12px
-
-// GPS 靠地圖右上方；說明收合，長訊息可捲動，不佔用左側清單。
-.gps-panel
-  flex: 0 1 auto
-  align-self: flex-end
-  width: fit-content
-  min-height: 0
-  max-height: 50%
-  max-width: min(340px, 100%)
-  padding: 12px
-  overflow-y: auto
-  overscroll-behavior: contain
-  border: 1px solid #e0e9e7
-  border-radius: 10px
-  background: #fff
-  box-shadow: 0 5px 20px #1c393121
-  pointer-events: auto
-
-.gps-details
-  margin-top: 8px
-
-  summary
-    color: #536b70
-    font-size: .78rem
-    cursor: pointer
-
-.gps-actions, .gps-links
-  display: flex
-  flex-wrap: wrap
-  align-items: center
-  gap: 8px 14px
-
-.gps-button, .gps-clear
-  min-height: 40px
-  padding: 8px 12px
-  border: 1px solid #b8d9d3
-  border-radius: 8px
-  background: #e8f5f2
-  color: #096d65
-  font-size: .86rem
-  font-weight: 750
-
-  &:focus-visible
-    outline: 3px solid #78c7be
-    outline-offset: 2px
-
-  &:disabled
-    opacity: .6
-    cursor: wait
-
-.gps-clear
-  background: #fff
-
-.gps-status p, .gps-help
-  margin: 7px 0 0
-  color: #536b70
-  font-size: .78rem
-  line-height: 1.55
-  overflow-wrap: anywhere
-
-.gps-status .gps-error
-  color: #92521e
-
-.gps-help
-  font-size: .73rem
-
-.gps-links
-  margin-top: 8px
-
-  a
-    color: #096d65
-    font-size: .8rem
-    text-underline-offset: 3px
+  margin-top: 14px
 
 .filter-row
   display: flex
@@ -244,312 +287,420 @@ button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible
   gap: 8px
   margin-top: 14px
 
-.filter-help
-  margin: 10px 0 0
-  color: #65777b
-  font-size: .77rem
-  line-height: 1.55
+.filter-help, .registry-help
+  font-size: .8rem
+  line-height: 1.65
+  color: var(--muted)
 
-// 結果區可獨立捲動，保留桌機篩選面板位置。
+.data-disclosure
+  margin-top: 16px
+  border-top: 1px solid var(--line)
+  padding-top: 12px
+
+  > summary
+    cursor: pointer
+    font-size: .84rem
+    color: var(--clay-dark)
+
+.data-status
+  margin-top: 12px
+  padding: 12px
+  border-radius: 10px
+  background: #f5ede4
+  font-size: .8rem
+  line-height: 1.65
+  overflow-wrap: anywhere
+
+  p
+    margin: 8px 0 0
+
+  summary
+    cursor: pointer
+
+.data-status-heading
+  display: flex
+  align-items: center
+  justify-content: space-between
+  gap: 10px
+
+  button
+    flex-shrink: 0
+    padding: 8px 10px
+    border: 1px solid var(--line)
+    border-radius: 8px
+    background: var(--paper)
+    color: var(--clay-dark)
+
+.data-warning
+  color: #7a4f24
+
 .results
   flex: 1
   min-height: 0
-  overflow-y: auto
+  overflow: auto
   overscroll-behavior: contain
   scrollbar-gutter: stable
-  padding: 20px clamp(14px, 2.4vw, 30px) 32px
-  scroll-margin-top: 12px
+  padding: 0 6px 25px 2px
+  scrollbar-color: #d7bc9e transparent
+  scrollbar-width: thin
 
 .results-heading
   display: flex
-  align-items: baseline
+  align-items: center
   justify-content: space-between
   gap: 10px
-  margin: 0 5px 13px
+  margin: 3px 0 10px
 
   h2
-    display: flex
-    align-items: baseline
-    flex-wrap: wrap
-    gap: 8px
     margin: 0
-    font-size: 1rem
+    font-size: 1.08rem
+    font-weight: 700
 
 .count
-  color: #6a7c80
-  font-size: .79rem
-  font-weight: 500
-
-.share-row
-  margin: 0 5px 14px
+  display: block
+  margin-top: 4px
+  color: var(--muted)
+  font-size: .75rem
+  font-weight: 400
 
 .map-jump
-  padding: 5px 0
+  display: inline-flex
+  align-items: center
+  gap: 5px
+  min-height: 42px
   border: 0
   background: transparent
-  color: #0a6d65
-  font-size: .82rem
-  font-weight: 750
-  white-space: nowrap
+  color: var(--clay-dark)
+  font-size: .8rem
+
+.results-status
+  color: var(--muted)
+  font-size: .78rem
+  line-height: 1.6
+  margin: 4px 0 12px
+
+.share-row
+  margin-bottom: 14px
+
+  .oc-share-button
+    border: 0
+    padding: 0
+    min-height: 34px
+    background: transparent
+    font-size: .78rem
+    color: var(--muted)
+    text-decoration: underline
 
 .hospital-list
   display: grid
-  gap: 11px
+  gap: 15px
 
-// 院所卡片、服務標籤及選取狀態。
 .hospital-card
+  min-width: 0
+  border: 1px solid var(--line)
+  border-radius: 17px
+  background: var(--paper)
   overflow: hidden
-  border: 1px solid #dce6e4
-  border-radius: 13px
-  background: #fff
-  transition: border-color .15s, box-shadow .15s
+  transition: border-color .18s, box-shadow .18s
 
   &.selected
-    border-color: #0b716c
-    box-shadow: 0 0 0 2px #ddefe9
+    border-color: #b97559
+    box-shadow: 0 0 0 1px #b9755925
 
 .card-select
-  display: block
   width: 100%
-  padding: 15px 16px 0
+  display: flex
+  align-items: flex-start
+  gap: 12px
   border: 0
   background: transparent
+  padding: 18px 18px 0
   color: inherit
   text-align: left
 
+  &:hover .card-heading strong
+    color: var(--clay-dark)
+
+.card-symbol
+  flex: 0 0 41px
+  display: grid
+  place-items: center
+  height: 44px
+  border-radius: 11px
+  color: #8c7454
+  background: #f3eddf
+
+  .ui-icon
+    width: 25px
+    height: 25px
+
+.card-copy
+  display: block
+  min-width: 0
+  flex: 1
+
 .card-heading
   display: flex
-  align-items: center
+  align-items: flex-start
   justify-content: space-between
   gap: 10px
 
   strong
-    font-size: 1.03rem
-    line-height: 1.45
+    font-size: 1.05rem
+    font-weight: 700
+    line-height: 1.55
+    overflow-wrap: anywhere
 
-.card-letter
-  display: grid
-  place-items: center
-  width: 25px
-  height: 25px
-  flex: 0 0 25px
-  border-radius: 50%
-  background: #0b716c
-  color: white
-  font-size: .76rem
-  font-weight: 800
+  .ui-icon
+    width: 16px
+    color: #a38a75
+    margin-top: 3px
 
 .service-row
   display: flex
   flex-wrap: wrap
-  gap: 6px
-  margin: 10px 0 8px
+  gap: 5px
+  margin: 7px 0
 
 .service-tag
-  display: inline-block
-  padding: 5px 8px
-  border-radius: 5px
-  background: #e7f4f0
-  color: #0a655e
-  font-size: .74rem
-  font-weight: 750
+  padding: 3px 8px
+  border-radius: 6px
+  background: #f5ead7
+  color: #745537
+  font-size: .7rem
+  font-weight: 500
+  line-height: 1.6
 
-  &.muted
-    background: #f1f3f3
-    color: #647479
-
-.status-line
-  display: flex
-  align-items: center
-  gap: 7px
-  color: #0a6c63
-  font-size: .84rem
-  font-weight: 700
-
-  &.unknown
-    color: #a26332
-
-  &.closed
-    color: #61747a
-
-.status-dot
-  width: 7px
-  height: 7px
-  border-radius: 50%
-  background: currentColor
+  &.registry-tag
+    background: #f0eee7
+    color: #736957
 
 .location
-  display: block
-  margin: 7px 0 0
-  color: #64777c
-  font-size: .8rem
+  display: flex
+  align-items: flex-start
+  gap: 5px
+  color: var(--muted)
+  font-size: .81rem
+  line-height: 1.65
 
-.hospital-note
+  .ui-icon
+    width: 15px
+    height: 20px
+
+.status-line, .night-hours
   display: block
-  margin: 7px 0 0
-  color: #52696d
-  font-size: .79rem
-  line-height: 1.55
+  font-size: .77rem
+  color: var(--muted)
+  line-height: 1.6
+  margin-top: 5px
 
 .night-hours
-  display: block
-  margin-top: 8px
-  color: #254b51
-  font-size: .84rem
-  font-weight: 750
+  color: #7b563c
 
-// 撥號與導航的主要行動按鈕。
 .card-actions
   display: grid
   grid-template-columns: 1fr 1fr
-  gap: 9px
-  padding: 15px 16px 16px
+  gap: 10px
+  padding: 17px 18px 9px
 
-  a
-    display: grid
-    place-items: center
-    min-height: 43px
-    border-radius: 8px
-    font-size: .86rem
-    font-weight: 750
-    text-align: center
-    text-decoration: none
+.call-button, .route-button
+  min-height: 45px
+  display: inline-flex
+  align-items: center
+  justify-content: center
+  gap: 8px
+  border: 1px solid #c6a78e
+  border-radius: 10px
+  padding: 9px 12px
+  background: var(--paper)
+  color: #79523c
+  text-decoration: none
+  font-size: .9rem
+  font-weight: 600
+  text-align: center
+
+  &:hover
+    background: var(--soft)
 
 .call-button
-  border: 1px solid #0b716c
-  background: #0b716c
-  color: white
+  background: var(--clay)
+  border-color: var(--clay)
+  color: #fffaf4
 
   &:hover
-    background: #075a55
+    background: var(--clay-dark)
+    border-color: var(--clay-dark)
 
-.route-button
-  border: 1px solid #d2dddb
-  background: #fff
-  color: #183036
+.contact-row
+  display: flex
+  flex-wrap: wrap
+  align-items: center
+  gap: 4px 10px
+  padding: 0 18px 10px
+  font-size: .75rem
+  color: var(--muted)
 
-  &:hover
-    background: #f3f8f7
+  input
+    width: 100%
+    padding: 8px
+    border: 1px solid var(--line)
+    background: var(--paper)
+    border-radius: 6px
 
-.card-source
-  margin-top: 12px
+.copy-phone
+  display: inline-flex
+  align-items: center
+  gap: 4px
+  min-height: 32px
+  padding: 3px 5px
+  border: 0
+  color: var(--muted)
+  background: transparent
+  font-size: .74rem
+
+  .ui-icon
+    width: 13px
+    height: 13px
+
+.copy-message:empty
+  display: none
+
+.hospital-card
+  .oc-detail-disclosure
+    border-color: var(--line)
+
+    summary
+      padding: 12px 18px
+      color: var(--clay-dark)
+      text-align: center
+      font-size: .85rem
+      font-weight: 500
+
+  .oc-detail-content
+    color: var(--ink)
+    padding: 0 18px 18px
+
+  .oc-verification-notice
+    background: var(--soft)
+    color: #75533c
 
 .hospital-details
   display: grid
-  gap: 10px
-  margin: 0 0 15px
-
-  div
-    display: grid
-    gap: 2px
+  gap: 12px
+  margin: 0 0 16px
 
   dt
-    color: #687b7f
-    font-size: .8rem
-    font-weight: 700
+    color: var(--muted)
+    font-size: .76rem
 
   dd
-    margin: 0
+    margin: 3px 0 0
+    font-size: .86rem
     overflow-wrap: anywhere
 
+.card-source
+  margin-top: 10px
+
+.phone-unavailable
+  align-self: center
+  color: var(--muted)
+  font-size: .78rem
+
 .data-footnote
-  margin: 16px 5px 0
-  color: #687b7f
-  font-size: .76rem
-  line-height: 1.6
+  font-size: .73rem
+  color: var(--muted)
+  line-height: 1.75
+  margin: 20px 0 0
 
 .empty-state
-  padding: 27px 20px
-  border: 1px solid #dce6e4
-  border-radius: 12px
-  background: #fff
+  padding: 30px 22px
+  border: 1px dashed #cfbaa3
+  border-radius: 16px
 
   h3
-    margin: 0 0 6px
-    font-size: 1rem
+    margin: 0 0 10px
+    font-size: 1.05rem
 
   p
-    margin: 0 0 14px
-    color: #64777c
-    font-size: .86rem
+    color: var(--muted)
+    font-size: .88rem
+    line-height: 1.75
 
 .clear-button
+  min-height: 44px
+  border: 1px solid #c6a78e
+  border-radius: 9px
   padding: 9px 13px
-  border: 1px solid #0b716c
-  border-radius: 8px
-  background: white
-  color: #0b716c
-  font-size: .84rem
-  font-weight: 700
+  background: var(--paper)
+  color: var(--clay-dark)
 
-// 位置面板：既有分享 iframe 與無嵌圖時的地址備援。
-.map-pane
-  position: sticky
-  top: 0
+.pagination
+  display: flex
+  align-items: center
+  justify-content: center
+  gap: 14px
+  margin: 24px 0 0
+  color: var(--muted)
+  font-size: .82rem
+
+  button
+    min-height: 43px
+    padding: 8px 13px
+    border: 1px solid var(--line)
+    border-radius: 9px
+    background: var(--paper)
+    color: var(--clay-dark)
+
+    &:disabled
+      opacity: .45
+
+// 地圖保持乾淨，目的地與路線固定在圖面下方。
+.desktop-map
+  grid-column: 2
+  grid-row: 1 / span 2
   min-width: 0
+  min-height: 0
+
+.map-pane
+  display: flex
+  flex-direction: column
+  min-height: 0
   height: 100%
-  padding: 20px
-  background: #fff
-  scroll-margin-top: 14px
+  overflow: hidden
+  border: 1px solid var(--line)
+  border-radius: 20px
+  background: var(--paper)
 
 .map-heading
   display: flex
-  align-items: baseline
+  align-items: center
   justify-content: space-between
-  gap: 10px
-  margin-bottom: 13px
+  gap: 12px
+  flex: 0 0 auto
+  padding: 16px 20px
 
   h2
-    margin: 0
+    margin: 5px 0 0
     font-size: 1rem
-
-  span
-    color: #687b80
-    font-size: .8rem
+    font-weight: 650
 
 .map-back
-  display: none
-  min-height: 36px
-  padding: 5px 8px
+  min-height: 42px
+  display: inline-flex
+  align-items: center
+  gap: 6px
+  padding: 8px 0
   border: 0
   background: transparent
-  color: #0b716c
-  font-size: .84rem
-  font-weight: 750
-
-.map-info-toggle
-  display: none
-  min-height: 36px
-  margin-left: auto
-  padding: 5px 9px
-  border: 1px solid #b8d9d3
-  border-radius: 7px
-  background: #fff
-  color: #0b716c
-  font-size: .84rem
-  font-weight: 750
+  color: var(--clay-dark)
+  font-size: .82rem
   white-space: nowrap
-
-// 手機原生彈窗，資訊卡可按需展开。
-.mobile-map-dialog
-  width: min(760px, calc(100vw - 24px))
-  max-width: none
-  max-height: calc(100dvh - 24px)
-  padding: 0
-  overflow: auto
-  border: 0
-  border-radius: 15px
-  box-shadow: 0 18px 60px #142d3040
-
-  &::backdrop
-    background: #102c36a8
 
 .map-stage
   position: relative
-  min-height: min(630px, calc(100vh - 110px))
-  overflow: hidden
-  border-radius: 13px
-  background: #eef5f3
+  flex: 1
+  min-height: 300px
+  background: var(--sage)
   isolation: isolate
 
 .map-iframe
@@ -559,244 +710,390 @@ button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible
   height: 100%
   border: 0
 
-// 上方定位與下方院所卡片各自限高；中央透明區域交由地圖接收拖曳。
-.map-controls
-  position: absolute
-  z-index: 3
-  inset: 17px
-  display: flex
-  flex-direction: column
-  justify-content: space-between
-  gap: 12px
-  pointer-events: none
-
 .map-empty-panel
   position: absolute
-  inset: 0 0 150px
-  display: grid
-  align-content: center
-  justify-items: center
-  gap: 8px
-  padding: 26px
+  inset: 0
+  display: flex
+  flex-direction: column
+  align-items: center
+  justify-content: center
+  gap: 10px
+  padding: 24px
   text-align: center
 
   strong
-    color: #214a4a
-    font-size: 1.04rem
+    font-size: 1.05rem
+    font-weight: 600
 
   p
-    max-width: 290px
+    max-width: 310px
     margin: 0
-    color: #60777a
-    font-size: .86rem
-    line-height: 1.6
+    color: #656e56
+    font-size: .9rem
+    line-height: 1.7
 
 .map-pin
-  display: grid
+  width: 38px
+  height: 38px
+  color: #778265
+
+.map-controls
+  position: absolute
+  z-index: 2
+  top: 14px
+  right: 14px
+  max-width: calc(100% - 28px)
+
+.gps-panel
+  position: relative
+
+.gps-actions
+  display: flex
+  align-items: center
+  border: 1px solid #cebeab
+  border-radius: 30px
+  box-shadow: 0 2px 8px #49372e12
+  background: var(--paper)
+  overflow: hidden
+
+.gps-button
+  display: inline-flex
+  align-items: center
+  gap: 6px
+  min-height: 44px
+  padding: 9px 13px
+  border: 0
+  background: transparent
+  color: var(--ink)
+  font-size: .85rem
+
+  &:disabled
+    opacity: .6
+
+.icon-button
+  display: inline-grid
   place-items: center
-  width: 54px
-  height: 54px
-  border: 1px solid #c7e3dc
+  width: 42px
+  height: 42px
+  padding: 8px
+  border: 0
   border-radius: 50%
-  background: #fff
-  color: #0b716c
-  font-size: 1.65rem
+  background: transparent
+  color: var(--ink)
+
+  &:hover
+    background: var(--soft)
+
+.gps-options
+  border-left: 1px solid var(--line)
+  border-radius: 0
+  width: 35px
+
+.gps-popover
+  position: absolute
+  z-index: 3
+  top: calc(100% + 9px)
+  right: 0
+  width: 275px
+  max-width: calc(100vw - 72px)
+  max-height: 255px
+  overflow: auto
+  overscroll-behavior: contain
+  padding: 12px
+  border: 1px solid var(--line)
+  border-radius: 13px
+  background: var(--paper)
+  box-shadow: 0 6px 24px #49372e18
+
+.gps-popover-heading
+  display: flex
+  justify-content: space-between
+  align-items: center
+  font-size: .85rem
+
+  .icon-button
+    width: 30px
+    height: 30px
+
+.gps-help, .gps-status p
+  margin: 7px 0
+  color: var(--muted)
+  font-size: .77rem
+  line-height: 1.7
+
+.gps-status .gps-error
+  color: #964328
+
+.gps-links
+  display: flex
+  flex-direction: column
+  gap: 10px
+  margin-top: 12px
+  font-size: .8rem
+
+.gps-clear
+  min-height: 38px
+  border: 1px solid var(--line)
+  border-radius: 8px
+  padding: 6px 10px
+  background: var(--paper)
+  color: var(--clay-dark)
+  font-size: .8rem
 
 .map-selection
-  flex: 0 1 auto
-  min-height: 0
-  max-height: 50%
-  overflow-y: auto
-  overscroll-behavior: contain
+  flex: 0 0 auto
   display: grid
-  gap: 3px
-  max-width: 380px
-  padding: 14px 16px
-  border-radius: 10px
-  background: white
-  box-shadow: 0 5px 20px #1c393121
-  pointer-events: auto
+  grid-template-columns: minmax(0, 1fr) auto
+  align-items: center
+  gap: 10px 18px
+  padding: 18px 20px
+  border-top: 1px solid var(--line)
 
-  strong
-    font-size: .88rem
+.map-destination
+  display: flex
+  align-items: flex-start
+  gap: 10px
+  min-width: 0
 
-  span
-    color: #62777a
-    font-size: .77rem
+  > .ui-icon
+    color: #96775d
+    margin-top: 2px
+
+  h3
+    margin: 4px 0
+    font-size: 1rem
+    font-weight: 650
+    line-height: 1.5
+    overflow-wrap: anywhere
+
+  p
+    margin: 0
+    color: var(--muted)
+    font-size: .8rem
+    line-height: 1.6
 
 .selection-kicker
-  color: #0b716c !important
-  font-size: .73rem !important
-  font-weight: 750
+  color: var(--muted)
+  font-size: .73rem
 
-.selection-actions
+.map-route
+  align-self: end
+  background: var(--clay)
+  border-color: var(--clay)
+  color: #fffaf4
+  white-space: nowrap
+
+  &:hover
+    background: var(--clay-dark)
+
+.map-extra
+  grid-column: 1 / -1
   display: flex
+  align-items: center
   flex-wrap: wrap
-  gap: 14px
-  margin: 8px 0 4px
+  gap: 8px 14px
+  color: var(--muted)
+  font-size: .75rem
+  line-height: 1.6
 
-  a
-    color: #0b716c
-    font-size: .82rem
-    font-weight: 750
-    text-underline-offset: 3px
+  .oc-source-link
+    font-size: .75rem
 
-// 資料來源頁的說明與來源清單。
+.map-info-toggle
+  grid-column: 1 / -1
+  justify-self: start
+  padding: 6px 0
+  min-height: 36px
+  border: 0
+  background: transparent
+  color: var(--clay-dark)
+  font-size: .78rem
+  text-decoration: underline
+
+.map-footnote
+  padding: 15px 20px
+  font-size: .78rem
+  color: var(--muted)
+
+// 說明保留在原畫面，以原生 dialog 處理焦點、Esc 和遮罩。
+.help-dialog, .mobile-map-dialog
+  color: var(--ink)
+  border: 1px solid var(--line)
+  border-radius: 22px
+  padding: 0
+  background: var(--paper)
+  max-height: calc(100dvh - 32px)
+  box-shadow: 0 24px 80px #49372e30
+
+  &::backdrop
+    background: #3f302b69
+    backdrop-filter: blur(3px)
+
+.help-dialog
+  width: min(560px, calc(100% - 32px))
+  padding: 26px
+
+  h2
+    font-size: 1.6rem
+    line-height: 1.5
+    margin: 4px 0 25px
+    letter-spacing: -.03em
+
+.help-heading
+  display: flex
+  align-items: center
+  justify-content: space-between
+  gap: 12px
+
+.help-steps
+  display: grid
+  gap: 22px
+
+  section
+    display: flex
+    align-items: flex-start
+    gap: 14px
+
+  h3
+    margin: 0 0 7px
+    font-size: 1rem
+    font-weight: 650
+
+  p
+    margin: 0
+    color: var(--muted)
+    font-size: .88rem
+    line-height: 1.8
+
+.help-step-icon
+  display: grid
+  place-items: center
+  width: 39px
+  height: 39px
+  border-radius: 12px
+  flex: 0 0 39px
+  background: var(--soft)
+  color: var(--clay-dark)
+
+.help-data-note
+  display: flex
+  align-items: flex-start
+  gap: 10px
+  margin-top: 24px
+  padding: 15px
+  border-radius: 12px
+  background: #f3eee4
+
+  p
+    margin: 0
+    color: var(--muted)
+    font-size: .8rem
+    line-height: 1.75
+
+.help-source-link
+  display: flex
+  align-items: center
+  justify-content: space-between
+  margin-top: 20px
+  padding: 10px 0 0
+  font-size: .9rem
+
+.mobile-map-dialog
+  width: min(760px, calc(100vw - 20px))
+  max-width: none
+  overflow: auto
+
+// 資料來源頁沿用同一套溫暖的閱讀樣式，來源內容維持完整。
 .sources-page
   max-width: 1200px
-  margin: 0 auto
-  padding: 25px clamp(20px, 3vw, 42px) 65px
+  margin: auto
+  padding: 30px clamp(20px, 3vw, 42px) 70px
 
 .sources-hero
-  padding: clamp(22px, 3vw, 38px)
-  border: 1px solid #e0e9e7
-  border-radius: 16px
-  background: #fff
+  padding: clamp(22px, 4vw, 42px)
+  border: 1px solid var(--line)
+  border-radius: 20px
+  background: var(--paper)
 
 .back-link, .bottom-return
-  color: #0b716c
-  font-size: .88rem
-  font-weight: 750
-  text-underline-offset: 3px
+  font-size: .9rem
 
 .sources-intro
   display: grid
-  grid-template-columns: minmax(0, 1.65fr) minmax(235px, .8fr)
+  grid-template-columns: 1.5fr 1fr
   align-items: end
-  gap: 32px
-  margin-top: 25px
+  gap: 30px
+  margin-top: 26px
 
   h1
-    margin: 5px 0 12px
-    font-size: clamp(1.7rem, 3vw, 2.35rem)
-    letter-spacing: -.035em
-    line-height: 1.25
+    margin: 7px 0 12px
+    font-size: clamp(1.7rem, 3vw, 2.3rem)
+    line-height: 1.4
 
   p
-    max-width: 670px
     margin: 0
-    color: #526b70
-    font-size: .95rem
-    line-height: 1.7
+    color: var(--muted)
+    line-height: 1.8
+    font-size: .94rem
 
 .page-kicker
-  color: #0b716c
-  font-size: .82rem
-  font-weight: 800
-  letter-spacing: .08em
+  color: var(--clay-dark)
+  font-size: .83rem
 
 .sources-aside
   display: grid
   gap: 7px
-  padding: 16px 18px
-  border-left: 4px solid #0b716c
-  border-radius: 4px 10px 10px 4px
-  background: #eaf6f3
-  color: #245655
-  font-size: .86rem
-  line-height: 1.55
-
-  strong
-    color: #0a625d
-    font-size: .93rem
+  padding: 18px
+  border-radius: 12px
+  background: var(--soft)
+  font-size: .85rem
+  line-height: 1.75
 
 .sources-content
   display: grid
   gap: 32px
-  margin-top: 30px
+  margin-top: 32px
 
 .section-heading
   display: flex
   align-items: baseline
+  flex-wrap: wrap
   justify-content: space-between
-  gap: 15px
-  margin-bottom: 15px
+  gap: 12px
+  margin-bottom: 16px
 
   h2
     margin: 0
     font-size: 1.2rem
 
   span
-    color: #63797d
     font-size: .8rem
+    color: var(--muted)
 
-.method-list
+.method-list, .source-groups
   display: grid
   grid-template-columns: repeat(3, minmax(0, 1fr))
-  gap: 13px
+  gap: 16px
+  list-style: none
   margin: 0
   padding: 0
-  list-style: none
 
-  li
-    min-width: 0
-    padding: 18px
-    border: 1px solid #e0e9e7
-    border-radius: 12px
-    background: #fff
-
-  strong
-    display: block
-    margin-top: 10px
-    font-size: .98rem
+.method-list li, .source-group
+  padding: 20px
+  border: 1px solid var(--line)
+  border-radius: 16px
+  background: var(--paper)
 
   p
-    margin: 7px 0 0
-    color: #587076
+    margin: 10px 0 0
+    color: var(--muted)
     font-size: .88rem
-    line-height: 1.6
+    line-height: 1.8
 
 .method-number
-  color: #0b716c
-  font-size: .82rem
-  font-weight: 800
-
-.source-groups
-  display: grid
-  grid-template-columns: repeat(3, minmax(0, 1fr))
-  gap: 13px
-
-.source-group
-  min-width: 0
-  padding: 20px
-  border: 1px solid #e0e9e7
-  border-radius: 12px
-  background: #fff
-
-  > p
-    min-height: 4.5em
-    margin: 10px 0 14px
-    color: #597176
-    font-size: .85rem
-    line-height: 1.6
-
-  ul
-    margin: 0
-    padding: 0
-    list-style: none
-
-  li
-    border-top: 1px solid #edf1f0
-
-  a
-    display: flex
-    align-items: baseline
-    justify-content: space-between
-    gap: 8px
-    padding: 12px 0
-    color: #0a625e
-    font-size: .88rem
-    font-weight: 650
-    line-height: 1.45
-    text-decoration: none
-    overflow-wrap: anywhere
-
-    &:hover
-      text-decoration: underline
-      text-underline-offset: 3px
-
-    span
-      flex: 0 0 auto
+  display: block
+  color: var(--clay)
+  margin-bottom: 10px
 
 .group-heading
   display: flex
@@ -806,315 +1103,276 @@ button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible
 
   h3
     margin: 0
-    font-size: 1.04rem
+    font-size: 1rem
 
   span
-    color: #657b7f
     font-size: .78rem
+    color: var(--muted)
+
+.source-group ul
+  padding: 0
+  margin: 15px 0 0
+  list-style: none
+
+.source-group li
+  border-top: 1px solid var(--line)
+
+.source-group a
+  display: flex
+  justify-content: space-between
+  gap: 8px
+  padding: 12px 0
+  font-size: .86rem
+  text-decoration: none
+  line-height: 1.7
+  overflow-wrap: anywhere
 
 .source-update
-  margin: 15px 0 0
-  color: #62787c
-  font-size: .83rem
-  line-height: 1.6
+  margin-top: 20px
+  font-size: .84rem
+  color: var(--muted)
 
 .bottom-return
   display: inline-block
   margin-top: 24px
 
-// v1.2：搜尋預設收合；展開內容自行捲動，收合摘要保留目前條件。
-.search-toggle
-  display: flex
-  align-items: center
-  justify-content: space-between
-  gap: 12px
-  padding: 15px clamp(20px, 3vw, 38px)
-  cursor: pointer
-  list-style: none
-
-  &::-webkit-details-marker
-    display: none
-
-  &:focus-visible
-    outline: 3px solid #78c7be
-    outline-offset: -3px
-
-.search-toggle-copy
-  min-width: 0
-
-  strong, span
-    display: block
-
-  strong
-    font-size: .96rem
-
-  span
-    margin-top: 5px
-    color: #65777b
-    font-size: .77rem
-    overflow: hidden
-    text-overflow: ellipsis
-    white-space: nowrap
-
-.search-toggle-state
-  flex-shrink: 0
-  color: #0b716c
-  font-size: .82rem
-  font-weight: 750
-
-.when-open
-  display: none
-
-.search-panel[open]
-  .when-open
-    display: inline
-
-  .when-closed
-    display: none
-
-.search-controls
-  max-height: min(35dvh, 340px)
-  overflow-y: auto
-  overscroll-behavior: contain
-  scrollbar-gutter: stable
-  padding: 4px clamp(20px, 3vw, 38px) 19px
-
-// 手機改為單欄，地圖使用彈窗，取消桌機獨立捲動限制。
-@media (max-width: 850px)
-  .main-layout
-    display: block
-    height: auto
-
-  .list-pane
-    border-right: 0
-
-  .results
-    overflow: visible
-    scrollbar-gutter: auto
-
-  .desktop-map
-    display: none
-
-  .map-pane
-    position: static
-    height: auto
-    padding: 20px 14px 28px
-
-  .map-stage
-    min-height: 390px
-
-  .map-back
-    display: inline-block
-
-  .map-info-toggle
-    display: inline-block
-
-  .sources-intro
-    grid-template-columns: 1fr
-    gap: 20px
-
-  .source-groups
-    grid-template-columns: repeat(2, minmax(0, 1fr))
-
-  .source-group:first-child
-    grid-row: span 2
-
-// 矮視窗縮短說明與搜尋區；列表仍獨立捲動，避免搜尋按鈕被捲走。
-@media (min-width: 851px) and (max-height: 720px)
-  .intro
-    padding-top: 14px
-    padding-bottom: 10px
-
-  .caution
-    margin-top: 10px
-
-  .search-controls
-    max-height: min(28dvh, 220px)
-
-@media (max-width: 520px)
-  .site-header
-    padding: 10px 20px 0
-    flex-wrap: wrap
-    gap: 8px
-
-  .brand
-    font-size: .98rem
-
-  .brand-mark
-    width: 29px
-    height: 29px
-
-  .site-nav
-    order: 3
-    width: calc(100% + 40px)
-    margin: 3px -20px 0
-    padding: 6px 14px
-    border-top: 1px solid #e9eeed
-
-    a
-      flex: 1
-      text-align: center
-      font-size: .86rem
-
-  .intro
-    padding: 22px 20px 16px
-
-  .intro h1
-    font-size: 1.56rem
-
-  .results
-    padding: 19px 14px 26px
-
-  .map-heading
-    margin: 0 4px 12px
-
-  .map-heading span
-    display: none
-
-  .map-stage
-    min-height: 370px
-
-  .sources-page
-    padding: 16px 14px 45px
-
-  .sources-hero
-    padding: 21px 18px
-
-  .sources-intro
-    margin-top: 18px
-
-  .sources-content
-    gap: 27px
-    margin-top: 25px
-
-  .method-list, .source-groups
-    grid-template-columns: 1fr
-
-  .source-group:first-child
-    grid-row: auto
-
-  .source-group > p
-    min-height: 0
-
-// 尊重減少動態效果的系統偏好。
-@media (prefers-reduced-motion: reduce)
-  html
-    scroll-behavior: auto
-
-// v1.1：查詢範圍切換；按下狀態同时提供給輔助科技與視覺樣式。
-.scope-switch
-  display: flex
-  gap: 6px
-  margin-bottom: 14px
-  padding: 4px
-  border-radius: 10px
-  background: #edf3f1
-
-  button
-    flex: 1
-    padding: 10px 6px
-    border: 0
-    border-radius: 7px
-    background: transparent
-    color: #536b70
-    font-size: .84rem
-    font-weight: 700
-
-    &[aria-pressed='true']
-      background: #fff
-      color: #096d65
-      box-shadow: 0 1px 5px #17352a12
-
-// API 的進度與備援狀態放在結果區，手機也能閱讀與重新嘗試。
-.data-status
-  padding: 12px 14px
-  margin-bottom: 20px
-  border: 1px solid #d8e7e2
-  border-radius: 10px
-  background: #f2f8f5
-  font-size: .78rem
-  color: #45635b
-  overflow-wrap: anywhere
-
-  p
-    margin: 7px 0 0
-    line-height: 1.6
-
-  summary
-    margin-top: 8px
-    cursor: pointer
-
-.data-status-heading
-  display: flex
-  align-items: center
-  justify-content: space-between
-  gap: 10px
-  font-weight: 700
-
-  button
-    padding: 7px 10px
-    border: 1px solid #bcd5cb
-    border-radius: 6px
-    background: #fff
-    color: #096d65
-    white-space: nowrap
-
-    &:disabled
-      opacity: .55
-      cursor: wait
-
-.data-warning
-  color: #9b5b19
-
-.registry-help
-  font-size: .83rem
-  line-height: 1.6
-  color: #7d623e
-
-.service-tag.registry-tag
-  color: #745a39
-  background: #f4eee5
-
-.phone-unavailable
-  flex: 1
-  padding: 10px 0
-  font-size: .8rem
-  color: #657b80
-  overflow-wrap: anywhere
-
-// 清單一次渲染 20 筆，避免數千筆卡片拖慢行動裝置。
-.pagination
-  display: flex
-  justify-content: center
-  align-items: center
-  gap: 14px
-  margin: 22px 0
-  font-size: .83rem
-
-  button
-    border: 1px solid #c7d9d3
-    border-radius: 7px
-    padding: 9px 14px
-    background: #fff
-    color: #096d65
-
-    &:disabled
-      opacity: .4
-      cursor: default
-
 .api-source-list
   padding-left: 20px
-  color: #536b70
+  color: var(--muted)
   font-size: .9rem
   line-height: 1.8
 
   li + li
     margin-top: 20px
 
-  strong
-    color: #183036
+// 平板單欄切換；不卸載清單，保持卡片展開與閱讀位置。
+@media (min-width: 601px) and (max-width: 1100px)
+  .main-layout
+    display: flex
+    flex-direction: column
+    height: auto
+    min-height: 0
+    max-width: 880px
+    padding-bottom: 40px
 
-// header 原有版型不增加高度，版本標籤在窄螢幕縮短以免橫向溢出。
-@media (max-width: 520px)
-  .demo-badge
+  .finder-intro
+    padding: 6px 0 24px
+
+    h1
+      font-size: 1.9rem
+
+  .pet-companions
+    width: 190px
+
+  .view-switch
+    display: flex
+    gap: 4px
+    padding: 4px
+    margin-bottom: 22px
+    background: var(--soft)
+    border: 1px solid var(--line)
+    border-radius: 13px
+
+    button
+      flex: 1
+      display: flex
+      align-items: center
+      justify-content: center
+      gap: 10px
+      min-height: 48px
+      border: 0
+      border-radius: 10px
+      background: transparent
+      color: var(--ink)
+
+      &[aria-pressed='true']
+        background: var(--clay)
+        color: #fffaf4
+
+  .results
+    overflow: visible
+    scrollbar-gutter: auto
+    padding: 0
+
+  .list-pane
+    display: block
+
+  .map-jump
     display: none
+
+  .desktop-map
+    min-height: 680px
+
+  .map-pane
+    min-height: 680px
+    height: auto
+
+  .map-stage
+    min-height: 470px
+
+  .search-controls
+    max-height: 500px
+
+@media (max-width: 600px)
+  .site-header
+    min-height: 68px
+    padding: 10px 16px
+    gap: 6px
+
+  .brand
+    gap: 6px
+    font-size: .96rem
+
+    .brand-mark
+      width: 25px
+      height: 25px
+
+  .site-nav
+    gap: 0
+
+    a, button
+      padding: 7px 8px
+      font-size: .85rem
+
+  .main-layout
+    display: block
+    min-height: 0
+    height: auto
+    padding: 22px 18px 40px
+
+  .finder-intro
+    padding: 0 0 22px
+
+    h1
+      font-size: 1.45rem
+
+  .pet-companions
+    width: 120px
+
+  .eyebrow
+    font-size: .68rem
+
+  .list-pane
+    display: block
+
+  .results
+    overflow: visible
+    padding: 0
+    scrollbar-gutter: auto
+
+  .map-jump
+    display: none
+
+  .search-controls
+    max-height: 62dvh
+
+  .card-select
+    padding: 16px 14px 0
+    gap: 9px
+
+  .card-symbol
+    width: 34px
+    flex-basis: 34px
+    height: 38px
+
+    .ui-icon
+      width: 22px
+      height: 22px
+
+  .card-actions
+    padding: 15px 14px 7px
+    gap: 8px
+
+  .call-button, .route-button
+    min-height: 46px
+    gap: 6px
+    padding: 9px 8px
+    font-size: .85rem
+
+    .ui-icon
+      width: 18px
+      height: 18px
+
+  .contact-row
+    padding: 0 14px 10px
+
+  .mobile-map-dialog .map-pane
+    min-height: 0
+    border: 0
+    border-radius: 0
+
+  .map-heading
+    padding: 14px 16px
+
+  .map-stage
+    flex: 0 0 auto
+    height: clamp(290px, 49dvh, 500px)
+    min-height: 290px
+
+  .map-selection
+    padding: 16px
+    column-gap: 10px
+
+  .map-destination
+    gap: 7px
+
+    > .ui-icon
+      display: none
+
+    h3
+      font-size: .9rem
+
+    p
+      font-size: .75rem
+
+  .map-route
+    font-size: .82rem
+    padding: 8px 10px
+
+  .help-dialog
+    padding: 20px
+
+    h2
+      font-size: 1.3rem
+
+  .help-steps section
+    gap: 10px
+
+  .sources-intro, .method-list, .source-groups
+    grid-template-columns: 1fr
+
+  .sources-page
+    padding: 22px 18px 50px
+
+  .sources-intro
+    gap: 20px
+
+  .sources-hero
+    padding: 22px 18px
+
+// 低高度桌機仍保有院所捲動區，避免說明吞掉所有清單高度。
+@media (min-width: 1101px) and (max-height: 720px)
+  .main-layout
+    min-height: 500px
+    padding-top: 16px
+    padding-bottom: 16px
+
+  .finder-intro
+    padding-bottom: 14px
+
+    h1
+      font-size: 1.4rem
+
+  .pet-companions
+    width: 128px
+
+  .search-controls
+    max-height: 220px
+
+@media (prefers-reduced-motion: reduce)
+  html
+    scroll-behavior: auto
+
+  *, *::before, *::after
+    transition-duration: 0s !important
+    animation-duration: 0s !important
