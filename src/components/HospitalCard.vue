@@ -63,14 +63,14 @@ article.hospital-card(:class="{ selected }")
     a.route-button(:href="directionsFromLocation(hospital.address, location)" target="_blank" rel="noopener noreferrer" :aria-label="`以 Google 地圖${location ? '從目前位置' : ''}導航至 ${hospital.name}`")
       UiIcon(name="route")
       span 路線導航
-  .contact-row(v-if="callNumber")
-    span {{ hospital.phone }}
-    button.copy-phone(type="button" :aria-label="`複製 ${hospital.name} 的電話`" @click="copyPhone")
-      UiIcon(name="copy")
-      span 複製電話
-    span.copy-message(role="status") {{ copyMessage }}
-    input(v-if="copyFallback" ref="phoneInput" :value="callNumber" aria-label="可手動複製的電話" readonly @focus="$event.target.select()")
   DetailDisclosure(label="院所詳情")
+    .contact-row(v-if="callNumber")
+      span {{ hospital.phone }}
+      button.copy-phone(type="button" :aria-label="`複製 ${hospital.name} 的電話`" @click="copyPhone")
+        UiIcon(name="copy")
+        span 複製電話
+      span.copy-message(role="status") {{ copyMessage }}
+      input(v-if="copyFallback" ref="phoneInput" :value="callNumber" aria-label="可手動複製的電話" readonly @focus="$event.target.select()")
     dl.hospital-details
       div
         dt 地區與地址

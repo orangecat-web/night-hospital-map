@@ -1,20 +1,27 @@
 <script setup>
-import { nextTick, ref } from 'vue'
+import { nextTick, onMounted, onUnmounted, ref } from 'vue'
 import UiIcon from './UiIcon.vue'
 const props = defineProps({ current: { type: String, default: 'directory' } })
 const emit = defineEmits(['find'])
 const root = props.current === 'sources' ? '../' : './'
 const helpDialog = ref(null)
 const helpOpen = ref(false)
+const menu = ref(null)
+const menuToggle = ref(null)
 let returnFocus
 function find(event) {
   if (props.current !== 'directory') return
   event.preventDefault()
+  if (menu.value) menu.value.open = false
   emit('find')
 }
 // 原生 dialog 提供焦點圈限與 Esc；關閉後把焦點還給開啟的按鈕。
 function openHelp() {
   returnFocus = document.activeElement
+  if (menu.value?.open) {
+    returnFocus = menuToggle.value
+    menu.value.open = false
+  }
   helpOpen.value = true
   helpDialog.value.showModal()
 }
@@ -25,6 +32,15 @@ function closed() {
 function backdropClick(event) {
   if (event.target === event.currentTarget) helpDialog.value.close()
 }
+function closeOutside(event) {
+  if (menu.value?.open && !menu.value.contains(event.target)) menu.value.open = false
+}
+function closeMenu() {
+  menu.value.open = false
+  menuToggle.value.focus()
+}
+onMounted(() => document.addEventListener('click', closeOutside))
+onUnmounted(() => document.removeEventListener('click', closeOutside))
 </script>
 
 <template lang="pug">
@@ -35,6 +51,12 @@ header.site-header
   nav.site-nav(aria-label="主要導覽")
     a(:href="root" :aria-current="current === 'directory' ? 'page' : undefined" @click="find") 找醫院
     button(type="button" :aria-expanded="helpOpen" aria-haspopup="dialog" @click="openHelp") 使用說明
+  details.mobile-nav(ref="menu" @keydown.esc.prevent="closeMenu")
+    summary.icon-button(ref="menuToggle" aria-label="導覽選單")
+      UiIcon(name="menu")
+    .mobile-nav-menu
+      a(:href="root" @click="find") 找醫院
+      button(type="button" aria-haspopup="dialog" @click="openHelp") 使用說明
 dialog.help-dialog(ref="helpDialog" aria-labelledby="help-title" @close="closed" @click="backdropClick")
   .help-heading
     span.eyebrow 陪你一步一步，找到照顧
@@ -47,7 +69,7 @@ dialog.help-dialog(ref="helpDialog" aria-labelledby="help-title" @close="closed"
         UiIcon(name="phone")
       div
         h3 先致電，確認是否接診
-        p 點「先打電話」交給裝置撥號。若裝置不支援，可複製電話；請先確認收治動物、接診與費用。
+        p 點「先打電話」交給裝置撥號。若裝置不支援，可在院所詳情中複製電話；請先確認收治動物、接診與費用。
     section
       span.help-step-icon
         UiIcon(name="locate")

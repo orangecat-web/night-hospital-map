@@ -15,6 +15,7 @@ const drawings = {
   copy: ['M9 8h11v13H9V8ZM15 8V3H4v13h5'],
   locate: ['M12 2v4M12 18v4M2 12h4M18 12h4', 'M19 12a7 7 0 1 1-14 0 7 7 0 0 1 14 0', 'M14 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0'],
   list: ['M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01'],
+  menu: ['M4 6h16M4 12h16M4 18h16'],
   info: ['M12 11v6M12 7h.01', 'M22 12a10 10 0 1 1-20 0 10 10 0 0 1 20 0'],
 }
 const paths = computed(() => drawings[props.name] ?? drawings.paw)

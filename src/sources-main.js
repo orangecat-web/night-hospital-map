@@ -3,5 +3,6 @@ import { createApp } from 'vue'
 import SourcesApp from './SourcesApp.vue'
 import './style.sass'
 import './clay.sass'
+import './wireframe-layout.sass'
 
 createApp(SourcesApp).mount('#app')

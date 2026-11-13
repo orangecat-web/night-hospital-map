@@ -22,7 +22,7 @@ section.gps-panel(aria-label="GPS 目前位置" :aria-busy="locating")
     button.gps-button(type="button" :disabled="locating" @click="activate")
       UiIcon(name="locate")
       span {{ label }}
-    button.gps-options.icon-button(type="button" :aria-expanded="expanded" aria-label="定位選項與說明" @click="expanded = !expanded")
+    button.gps-options.icon-button(v-if="location || errorCode" type="button" :aria-expanded="expanded" aria-label="定位選項與說明" @click="expanded = !expanded")
       UiIcon(name="chevron")
   .gps-popover(v-if="expanded")
     .gps-popover-heading

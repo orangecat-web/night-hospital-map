@@ -92,9 +92,10 @@ const activeFilters = computed(() => [
 ].filter(Boolean))
 // 搜尋收起後仍顯示範圍與條件；沿用停車作品的原生 details，不卸載輸入元件。
 const searchSummary = computed(() => [
+  !city.value && '全台',
   scope.value === 'night' ? '已查閱夜間院所' : '全部院所名冊',
   ...activeFilters.value.map((filter) => filter.label),
-].join(' · '))
+].filter(Boolean).join('・'))
 
 const selected = computed(() => filtered.value.find((item) => item.id === selectedId.value) ?? visibleHospitals.value[0] ?? null)
 
@@ -220,12 +221,11 @@ onUnmounted(() => {
 </script>
 
 <template lang="pug">
-.site-shell
+.site-shell.directory-shell
   SiteHeader(current="directory" @find="findHospitals")
   main.main-layout
     .finder-intro
       div
-        span.eyebrow 夜間毛孩就醫
         h1(ref="finderTitle" tabindex="-1")
           span 陪毛孩，
           span 找到今晚的照顧
@@ -245,7 +245,6 @@ onUnmounted(() => {
           UiIcon(name="filter")
           .search-toggle-copy
             strong 搜尋與篩選
-            span(:title="searchSummary") {{ searchSummary }}
           span.search-toggle-state(aria-hidden="true")
             UiIcon(name="chevron")
         #hospital-search-controls.search-controls
@@ -267,17 +266,13 @@ onUnmounted(() => {
           details.data-disclosure
             summary 資料與更新資訊
             DataStatus(:state="state" :loading="loading" :label="statusLabel" @refresh="load()")
+      p.search-summary(:title="searchSummary") {{ searchSummary }}
       //- 可捲動結果區含狀態、分頁與卡片，避免名冊增加後擠壓桌機地圖。
       .results
         .results-heading
           h2 {{ scope === 'night' ? '夜間院所' : '院所名冊' }}
             span.count(aria-live="polite") {{ filtered.length }} 間{{ scope === 'night' ? '已查閱夜間院所' : '名冊院所' }}
-          .results-tools
-            ShareLinkButton(:url="shareUrl" label="分享查詢")
-            button.map-jump(type="button" :aria-label="isMobile ? '打開地圖' : '查看地圖'" @click="viewMap")
-              UiIcon(name="map")
-              span 地圖
-        p.results-status(v-if="loading || state.errors.length" role="status") {{ loading ? '正在整理院所資訊…' : '暫用現有資料，更新詳情見搜尋面板。' }}
+        p.results-status.sr-only(v-if="loading || state.errors.length" role="status") {{ loading ? '正在整理院所資訊…' : '暫用現有資料，更新詳情見搜尋面板。' }}
         p.registry-help(v-if="scope === 'all'") 此範圍包含夜間服務未確認的獸醫診療機構，不是全台急診名單。
         FilterSummary(:filters="activeFilters" @remove="removeFilter" @clear="clearFilters")
         .empty-state(v-if="filtered.length === 0" role="status")
@@ -295,9 +290,16 @@ onUnmounted(() => {
           button(type="button" :disabled="page === 1" @click="changePage(page - 1)") 上一頁
           span 第 {{ page }} / {{ pageCount }} 頁
           button(type="button" :disabled="page === pageCount" @click="changePage(page + 1)") 下一頁
+        .share-row
+          ShareLinkButton(:url="shareUrl" label="分享查詢")
         p.data-footnote 夜間資訊最後整理：{{ checkedAt }}。API 擷取不會重設官網查閱日；未逐一電話確認，實際收治請以院所回覆為準。
     div.desktop-map(ref="mapSection" v-show="!isMobile && (!isTablet || tabletView === 'map')")
       LocationPreview(v-if="!isMobile" :hospital="selected" :source="selected ? sourceById.get(selected.sourceId) : null" :location="location" :locating="locating" :error-code="errorCode" :show-current-location="showCurrentLocation" :show-back="isTablet" back-label="返回院所列表" @back="showList({ focusSelection: true })" @locate="locate" @clear="clearLocation" @show-location="returnToLocation")
+  //- 底部地圖入口佔獨立列，列表只在上方捲動，不會蓋住院所操作。
+  .mobile-map-dock(v-if="isMobile")
+    button.mobile-map-launch.call-button(type="button" @click="viewMap")
+      UiIcon(name="map")
+      span 打開地圖
   //- 手機地圖資訊預設收合，沿用 v1.0 的互動方式。
   dialog.mobile-map-dialog(ref="mapDialog" aria-label="院所地圖" @close="onMapClosed")
     LocationPreview(v-if="mapOpen" :hospital="selected" :source="selected ? sourceById.get(selected.sourceId) : null" :location="location" :locating="locating" :error-code="errorCode" :show-current-location="showCurrentLocation" :collapsible="true" :show-back="true" @locate="locate" @clear="clearLocation" @show-location="returnToLocation" @back="closeMap")
