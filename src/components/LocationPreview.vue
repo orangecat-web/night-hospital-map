@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { ContactLinks, MapEmbed, SourceLink } from '@orangecat/vue-components'
 import mapEmbeds from '../data/map-embeds.json'
 import { currentLocationEmbed, directionsFromLocation } from '../services/locationLinks.js'
@@ -13,6 +13,64 @@ const props = defineProps({
   errorCode: { type: String, default: null }, showCurrentLocation: Boolean,
 })
 const emit = defineEmits(['back', 'locate', 'clear', 'show-location'])
+const mapStage = ref(null)
+const frameSize = ref(null)
+let sizeObserver
+let resizeTimer
+let resolutionQuery
+let pixelRatioTimer
+const currentPixelRatio = () => Math.round((window.devicePixelRatio || 1) * 1000) / 1000
+// 嵌圖只在可見且尺寸穩定後建立；F12 模擬還會改變 DPR，需一起同步。
+function syncFrameSize() {
+  clearTimeout(resizeTimer)
+  const stage = mapStage.value
+  if (!stage?.clientWidth || !stage.clientHeight) {
+    clearInterval(pixelRatioTimer)
+    pixelRatioTimer = null
+    frameSize.value = null
+    return
+  }
+  // F12 某些 DPR-only 切換連 resize／resolution 事件也不發出。
+  // 僅在圖面可見時每 500ms 比對一個數值，實際改變才讀取尺寸並重建。
+  if (!pixelRatioTimer) pixelRatioTimer = setInterval(() => {
+    if (document.visibilityState === 'visible' && frameSize.value && frameSize.value.pixelRatio !== currentPixelRatio()) syncFrameSize()
+  }, 500)
+  // 旋轉或展開資訊時，待容器尺寸穩定後換一個相同內容的新 frame，避免沿用舊視窗。
+  resizeTimer = setTimeout(() => {
+    const width = mapStage.value?.clientWidth ?? 0
+    const height = mapStage.value?.clientHeight ?? 0
+    const pixelRatio = currentPixelRatio()
+    if (!width || !height) {
+      frameSize.value = null
+    } else if (frameSize.value?.width !== width || frameSize.value?.height !== height || frameSize.value?.pixelRatio !== pixelRatio) {
+      frameSize.value = { width, height, pixelRatio }
+    }
+  }, 120)
+}
+// 裝置模擬可以只改像素比而不改 CSS 寬高；ResizeObserver 不會通知這種情況。
+function observeResolution() {
+  resolutionQuery?.removeEventListener('change', onResolutionChange)
+  resolutionQuery = window.matchMedia(`(resolution: ${currentPixelRatio()}dppx)`)
+  resolutionQuery.addEventListener('change', onResolutionChange)
+}
+function onResolutionChange() {
+  observeResolution()
+  syncFrameSize()
+}
+onMounted(() => {
+  sizeObserver = new ResizeObserver(syncFrameSize)
+  sizeObserver.observe(mapStage.value)
+  observeResolution()
+  window.addEventListener('resize', syncFrameSize)
+  syncFrameSize()
+})
+onUnmounted(() => {
+  sizeObserver?.disconnect()
+  resolutionQuery?.removeEventListener('change', onResolutionChange)
+  window.removeEventListener('resize', syncFrameSize)
+  clearTimeout(resizeTimer)
+  clearInterval(pixelRatioTimer)
+})
 const map = new MapEmbed(import.meta.env.VITE_GOOGLE_MAPS_EMBED_KEY)
 // 定位點與院所地圖獨立切換；不猜測院所座標，仍沿用已查核的分享嵌圖。
 const locationMapUrl = computed(() => props.showCurrentLocation ? currentLocationEmbed(props.location) : null)
@@ -29,8 +87,8 @@ section.map-pane(:aria-label="showingCurrent ? '目前位置' : '院所位置'")
     button.map-back(type="button" @click="emit('back')")
       UiIcon(:name="collapsible ? 'close' : 'back'")
       span {{ backLabel }}
-  .map-stage
-    iframe.map-iframe(v-if="mapUrl" :key="mapUrl" :src="mapUrl" :title="mapTitle" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen)
+  .map-stage(ref="mapStage")
+    iframe.map-iframe(v-if="mapUrl && frameSize" :key="`${mapUrl}:${frameSize.width}x${frameSize.height}@${frameSize.pixelRatio}`" :src="mapUrl" :title="mapTitle" :width="frameSize.width" :height="frameSize.height" loading="eager" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen)
     .map-caption(v-if="!showBack")
       h2 {{ showingCurrent ? '目前位置' : '院所位置' }}
     .map-empty-panel(v-if="!mapUrl")
