@@ -13,6 +13,8 @@ import { taiwanCities } from './data/regions.js'
 import { checkedAt, sources } from './data/sources.js'
 import { HospitalDirectory } from './domain/HospitalDirectory.js'
 
+const copyrightYear = new Date().getFullYear()
+
 // 非同步資料有變動時重建查詢物件；computed 讓卡片數量、地區選單與地圖一起更新。
 const { state, loading, statusLabel, load } = useHospitals()
 const { location, locating, errorCode, locate, clear: clearLocation } = useGeolocation()
@@ -300,6 +302,8 @@ onUnmounted(() => {
     button.mobile-map-launch.call-button(type="button" @click="viewMap")
       UiIcon(name="map")
       span 打開地圖
+  footer.site-footer
+    small © {{ copyrightYear }} OrangeCat · 夜間毛孩就醫
   //- 手機地圖資訊預設收合，沿用 v1.0 的互動方式。
   dialog.mobile-map-dialog(ref="mapDialog" aria-label="院所地圖" @close="onMapClosed")
     LocationPreview(v-if="mapOpen" :hospital="selected" :source="selected ? sourceById.get(selected.sourceId) : null" :location="location" :locating="locating" :error-code="errorCode" :show-current-location="showCurrentLocation" :collapsible="true" :show-back="true" @locate="locate" @clear="clearLocation" @show-location="returnToLocation" @back="closeMap")
