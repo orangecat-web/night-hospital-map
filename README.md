@@ -1,4 +1,4 @@
-# 夜間毛孩就醫 v1.4.1
+# 夜間毛孩就醫 v1.4.2
 
 Vue 3 + Vite 公益作品，以 Pug template 與縮排式 Sass 製作。v1.0 是使用者提供的原始 ZIP 基準；v1.1 加入免費政府 API、資料正規化、人工 JSON 合併，以及非同步載入與失敗備援。
 
@@ -120,3 +120,9 @@ GPS 通用工具來自 orangecat-ui 1.2.0，於 `src/vendor/orangecat-ui/geoloca
 桌機院所卡片採左資訊、右側電話／導航直排，詳情收合位於右下。手機採卡片按鈕上下排，右上漢堡選單提供「找醫院／使用說明」。手機底部地圖入口與捲動內容分成獨立區域，避免覆蓋按鈕。
 
 搜尋條件摘要顯示在搜尋列下方。地圖左上標示位置，右上定位；圖面下方只保留已選院所與查看路線，點選院所名稱可展開地址、時段與來源。
+
+### v1.4.2 地圖尺寸同步
+
+Google 嵌圖等到容器可見且尺寸穩定後才載入；隱藏的平板分頁不建立 iframe。彈窗顯示、裝置旋轉、容器大小或 Chrome F12 模擬的像素比（DPR）變更時，重新建立相同院所／定位點嵌圖，避免保留小尺寸圖面。
+
+地圖瀏覽器回歸：先 `npm run dev`，再執行 `python tests/map-frame.browser.py`。此選用測試需要 Python Playwright 及 Chromium；可設定 `PLAYWRIGHT_CHROMIUM_EXECUTABLE`，或使用 Playwright 自帶瀏覽器。`VET_UI_BASE_URL` 可覆寫測試站點。測試以假嵌圖驗證隱藏初始化、閒置不重載、F12 DPR-only／尺寸變更與關閉清理。

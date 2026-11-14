@@ -1,3 +1,13 @@
+# v1.4.2 Chrome F12 嵌圖同步驗證
+
+- 17 項資料／GPS 回歸、地圖瀏覽器回歸與正式建置通過。
+- 2026-11-14：使用者回報實體手機正常，問題發生於 Chrome F12 裝置模擬；一般 Chrome 首次開啟未穩定重現小圖面。
+- 確認 Chrome CDP 只將 DPR 由 1 改為 3、維持相同 CSS 寬高時，window.devicePixelRatio 會改變，但 resize／resolution／實體像素 ResizeObserver 均未通知。
+- 新增可見且尺寸穩定後才掛載 iframe，並在地圖可見時低頻比對 DPR；只有寬高或 DPR 實際改變才重建。隱藏分頁／關閉彈窗時清理觀察器與計時器。
+- 真實 Google 嵌圖測試：初始 417×700、DPR 1，F12 DPR 3 同尺寸，390×844／DPR 3／50% scale，以及關閉重開；iframe、內部視窗、#mapDiv 與 .gm-style 的 CSS 寬高均一致。圖面實際截圖已確認填滿。
+- 模擬延後 showModal 的回歸測試證明隱藏時不發出嵌圖請求；另驗證閒置不重載、DPR-only 重建、尺寸更新、平板分頁切換與關閉後不再建立 iframe。測試保存在 tests/map-frame.browser.py。
+- 本輪以 Chromium／DevTools Protocol 驗證，未聲稱已涵蓋每個 Chrome 版本的 F12 前端或實體手機硬體。
+
 # v1.4.1 wireframe 位置驗證
 
 - 2026-11-14：17 項資料／GPS 回歸測試、正式建置與 Chromium 11 組視窗尺寸驗證通過，包括 1440／1280 桌機、601–1100px 平板與 600／390／320px 手機。
